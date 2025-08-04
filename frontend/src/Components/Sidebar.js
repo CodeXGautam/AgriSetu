@@ -168,7 +168,7 @@ const Sidebar = (props) => {
             </div>
 
             {/* web view Sidebar */}
-            <div className="w-[25%] min-w-[220px] h-screen bg-slate-900 p-5 rounded-md flex flex-col
+            <div className="w-[25%] min-w-[220px] h-screen bg-slate-900 p-5 rounded-md  flex-col
                justify-between items-center shadow-md shadow-blue-800 hidden md:flex lg:flex xl:flex 2xl:flex
                transition-all duration-300 ease-in-out">
                 <div className="flex flex-col gap-5 w-[100%]">
