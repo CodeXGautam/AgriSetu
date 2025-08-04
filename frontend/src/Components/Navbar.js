@@ -38,7 +38,7 @@ const Navbar = (props) => {
         <div className="flex justify-between bg-slate-950 p-3 w-[90%] mx-auto border-b-2 border-blue-700">
             <Link to='/' className="flex justify-center items-center text-2xl font-extrabold text-gray-200 hover:text-white 
         cursor-pointer">
-                Vocintera
+                AgriSetu
             </Link>
 
             <div className='flex gap-8 text-md items-center text-gray-200'>
@@ -82,8 +82,8 @@ const Navbar = (props) => {
 
                 {
                     loggedIn &&
-                    <NavLink to='/practice' className='hover:bg-gray-900 p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
-                      Practice
+                    <NavLink to='/scan' className='hover:bg-gray-900 p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
+                      Scan
                     </NavLink>
                 }
 

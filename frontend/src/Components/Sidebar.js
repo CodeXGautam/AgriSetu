@@ -118,7 +118,7 @@ const Sidebar = (props) => {
                                 WebkitBackgroundClip: 'text',
                                 animationDuration: '5s'
                             }}>
-                            Vocintera
+                            AgriSetu
                         </h1>
 
                         <div className="flex justify-center items-center text-xl text-slate-300 hover:text-white
@@ -146,13 +146,13 @@ const Sidebar = (props) => {
                     hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
                         <IoHome /> Home
                     </NavLink>
-                    <NavLink to='/practice' className="flex justify-start items-center text-slate-300 hover:text-white
+                    <NavLink to='/scan' className="flex justify-start items-center text-slate-300 hover:text-white
                     hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <DiCode /> Practice
+                        <DiCode /> Scan
                     </NavLink>
-                    <NavLink to='/interview' className="flex justify-start items-center text-slate-300 hover:text-white
+                    <NavLink to='/crops-prediction' className="flex justify-start items-center text-slate-300 hover:text-white
                     hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <SlCalender /> Interviews
+                        <SlCalender /> Crops
                     </NavLink>
                     <NavLink to='/settings' className="flex justify-start items-center text-slate-300 hover:text-white
                     hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
@@ -180,7 +180,7 @@ const Sidebar = (props) => {
                             WebkitBackgroundClip: 'text',
                             animationDuration: '5s'
                         }}>
-                        Vocintera
+                        AgriSetu
                     </h1>
 
                     <div className="flex justify-start items-center gap-4">
@@ -200,14 +200,14 @@ const Sidebar = (props) => {
                     hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4">
                         <IoHome /> Home
                     </NavLink>
-                    <NavLink to='/practice' className="flex justify-start items-center text-slate-300 hover:text-white
+                    <NavLink to='/scan' className="flex justify-start items-center text-slate-300 hover:text-white
                     hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4">
-                        <DiCode /> Practice
+                        <DiCode /> Scan
                     </NavLink>
 
-                    <NavLink to='/interview' className="flex justify-start items-center text-slate-300 hover:text-white
+                    <NavLink to='/crops-prediction' className="flex justify-start items-center text-slate-300 hover:text-white
                     hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4">
-                        <SlCalender /> Interviews
+                        <SlCalender /> Crops
                     </NavLink>
 
                     <NavLink to='/settings' className="flex justify-start items-center text-slate-300 hover:text-white

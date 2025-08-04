@@ -23,7 +23,7 @@ const Footer = () => {
             </div>
 
             <div className="text-gray-400 text-sm text-center">
-                ©️ 2025 Vocintera | All rights reserved
+                ©️ 2025 AgriSetu | All rights reserved
             </div>
 
         </div>
