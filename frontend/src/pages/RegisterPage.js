@@ -278,7 +278,7 @@ const RegisterPage = (props) => {
                             WebkitBackgroundClip: 'text',
                             animationDuration: '5s'
                         }}>
-                        Train with AI. Interview with confidence
+                        Ask AgriSetu | Increase your Productivity and Profits
                     </h2>
                     <img src='https://cdn.prod.website-files.com/61a05ff14c09ecacc06eec05/6720e94e1cd203b14c045522_%20Interview-Notes.jpg'
                         alt='' className='min-w-[300px] opacity-[0.2] rounded-xl shadow-xl shadow-blue-700 mt-5' />
