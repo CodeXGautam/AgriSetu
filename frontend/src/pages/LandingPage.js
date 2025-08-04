@@ -18,10 +18,10 @@ const LandingPage = (props) => {
             <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
             <div className='flex w-[100%] p-5 justify-evenly'>
                 <div className='flex flex-col justify-center items-center gap-3 w-[80%]'>
-                    <h1 className='flex justify-center items-center font-bold text-blue-400 text-3xl'>Train Smart</h1>
-                    <h1 className='flex justify-center items-center font-bold text-blue-400 text-3xl'>Crack Interviews with Confidence</h1>
-                    <span className='flex text-gray-300 text-lg'>Voice-powered mock interviews to prepare you for the real deal</span>
-                    <span className='flex text-gray-300 text-lg'>Train with AI. Interview with Confidence</span>
+                    <h1 className='flex justify-center items-center font-bold text-blue-400 text-3xl'>Grow Smart</h1>
+                    <h1 className='flex justify-center items-center font-bold text-blue-400 text-3xl'>Increase your Productivity and Profits</h1>
+                    <span className='flex text-gray-300 text-lg'>AI enabled crops prediction</span>
+                    <span className='flex text-gray-300 text-lg'>Get the best crops for your land</span>
                     <button className='bg-blue-700 text-gray-300 p-4 rounded-xl hover:bg-blue-800 transition-all 
                     duration-300 shadow-md shadow-blue-500'
                         onClick={clickHandler}>
@@ -45,14 +45,13 @@ const LandingPage = (props) => {
                 <img src='https://cdn.prod.website-files.com/61a05ff14c09ecacc06eec05/6720e94e1cd203b14c045522_%20Interview-Notes.jpg'
                     alt='' className='w-[70%] min-w-[350px] opacity-[0.2] rounded-xl shadow-xl shadow-blue-700' />
                 <div className='absolute m-auto h-[100%] flex flex-col gap-3 justify-center items-center z-[10]'>
-                    <h1 className='text-4xl text-white font-bold'>Ace Your Next Interview</h1>
-                    <p className='text-sm font-semibold'>Practice with realistic mock interviews and get personalized feedback to improve your performance</p>
+                    <h1 className='text-4xl text-white font-bold'>Ace your Productivity ans yeild</h1>
+                    <p className='text-sm font-semibold'>AI enabled personalised crops personalised and disease detection</p>
                     <button className='bg-blue-700 text-gray-300 p-4 rounded-xl hover:bg-blue-800 transition-all 
                     duration-300 shadow-md shadow-blue-500 font-bold' onClick={clickHandler}>
                         Get Started</button>
                 </div>
             </div>
-
 
         <Footer/>
         </div>
