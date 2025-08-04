@@ -35,38 +35,38 @@ const Navbar = (props) => {
 
 
     return (
-        <div className="flex justify-between bg-slate-950 p-3 w-[90%] mx-auto border-b-2 border-blue-700">
-            <Link to='/' className="flex justify-center items-center text-2xl font-extrabold text-gray-200 hover:text-white 
-        cursor-pointer">
+        <div className="flex justify-between bg-gradient-to-l from-deepGreen to-gradientLight py-3 w-[90%] mx-auto border-b-2 border-gradientLight rounded-full shadow-md shadow-black px-10 ">
+            <Link to='/' className="flex justify-center items-center text-2xl font-extrabold text-cream hover:text-lightBrown 
+         cursor-pointer">
                 AgriSetu
             </Link>
 
-            <div className='flex gap-8 text-md items-center text-gray-200'>
+            <div className='flex gap-8 text-md items-center text-cream'>
                 {
                     !loggedIn &&
-                    <NavLink to='/product' className='hover:bg-gray-900 p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
+                    <NavLink to='/product' className='hover:text-lightBrown p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
                         Product
                     </NavLink>
                 }
 
                 {
                     !loggedIn &&
-                    <NavLink to='/pricing' className='hover:bg-gray-900 p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
+                    <NavLink to='/pricing' className='hover:text-lightBrown p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
                         Pricing
                     </NavLink>
                 }
 
                 {
                     !loggedIn &&
-                    <NavLink to='/resources' className='hover:bg-gray-900 p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
+                    <NavLink to='/resources' className='hover:text-lightBrown p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
                         Resources
                     </NavLink>
                 }
               
                 {
                     !loggedIn &&
-                    <NavLink to='/register' className='flex justify-center items-center bg-blue-700 p-2 
-                    rounded-xl hover:bg-blue-600 hover:scale-[1.05] duration-[1s]'>
+                    <NavLink to='/register' className='flex justify-center items-center bg-accentGreen p-2 
+                    rounded-xl hover:bg-lightGreen hover:scale-[1.05] duration-[1s] shadow-md '>
                         Get Started
                     </NavLink>
                 }
@@ -75,22 +75,22 @@ const Navbar = (props) => {
 
                  {
                     loggedIn &&
-                    <NavLink to='/home' className='hover:bg-gray-900 p-2 rounded-xl'>
+                    <NavLink to='/home' className='hover:text-lightBrown p-2 rounded-xl'>
                       Home
                     </NavLink>
                 }
 
                 {
                     loggedIn &&
-                    <NavLink to='/scan' className='hover:bg-gray-900 p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
+                    <NavLink to='/scan' className='hover:text-lightBrown p-2 rounded-xl hidden md:flex lg:flex xl:flex 2xl:flex'>
                       Scan
                     </NavLink>
                 }
 
                 {
                     loggedIn &&
-                    <button className='hover:bg-gray-900 hover:scale-[1.1] p-2 rounded-xl 
-                    text-blue-700 font-semibold' onClick={logOutHandler}>
+                    <button className='hover:text-lightBrown hover:scale-[1.1] p-2 rounded-xl 
+                    text-accentGreen font-semibold' onClick={logOutHandler}>
                       LogOut
                     </button>
                 }
