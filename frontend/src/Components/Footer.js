@@ -2,27 +2,27 @@ import { NavLink } from "react-router-dom"
 
 const Footer = () => {
     return (
-        <div className="flex flex-col gap-4 mt-20 mb-2">
+        <div className="flex flex-col gap-5 mt-20 mb-2 bg-darkGreen p-6">
 
-            <div className="flex text-gray-400 justify-evenly items-center text-md">
-                <NavLink to='/product' className='hover:text-gray-300'>
+            <div className="flex text-cream justify-evenly items-center text-md">
+                <NavLink to='/product' className='hover:text-lightBrown'>
                     Product
                 </NavLink>
 
-                <NavLink to='/pricing' className='hover:text-gray-300'>
+                <NavLink to='/pricing' className='hover:text-lightBrown'>
                     Pricing
                 </NavLink>
 
-                <NavLink to='/resources' className='hover:text-gray-300'>
+                <NavLink to='/resources' className='hover:text-lightBrown'>
                     Resources
                 </NavLink>
 
-                <NavLink to='/contact' className='hover:text-gray-300'>
+                <NavLink to='/contact' className='hover:text-lightBrown'>
                     Contact Us
                 </NavLink>
             </div>
 
-            <div className="text-gray-400 text-sm text-center">
+            <div className="text-cream text-sm text-center">
                 ©️ 2025 AgriSetu | All rights reserved
             </div>
 
