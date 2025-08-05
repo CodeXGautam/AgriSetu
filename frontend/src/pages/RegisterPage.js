@@ -7,6 +7,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import { toast } from "react-hot-toast";
 import { useGoogleLogin } from '@react-oauth/google';
+import leaf2 from '../images/leaf2.png';
 
 const RegisterPage = (props) => {
 
@@ -16,8 +17,8 @@ const RegisterPage = (props) => {
     const navigate = useNavigate();
 
 
-    const autohome = () =>{
-        if(loggedIn){
+    const autohome = () => {
+        if (loggedIn) {
             navigate('/home');
         }
     }
@@ -169,16 +170,19 @@ const RegisterPage = (props) => {
         }
     });
 
-    useEffect(()=>{
+    useEffect(() => {
         autohome();
-    },[])
+    }, [])
 
     return (
-        <div className="flex flex-col mt-5">
+        <div className="flex flex-col mt-5 overflow-hidden">
             <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-            <div className="flex min-h-screen justify-center items-center gap-10 p-10 w-[100%] bg-gradient-to-r from-deepGreen to-gradientLight text-cream">
-                <form className="flex flex-col gap-4 w-[80%] sm:w-[80%] md:w-[50%] lg:w-[50%] border-2 shadow-md shadow-darkBrown 
-            border-accentGreen p-10 rounded-xl min-w-[300px]" onSubmit={submitHandler}>
+            <div className="flex min-h-screen justify-center items-center gap-10 p-10 w-[100%] min-w-[300px]
+            bg-gradient-to-r from-deepGreen to-gradientLight text-cream relative">
+                <img src={leaf2} alt="" className="absolute w-[400px] h-[400px] opacity-20 -top-36 -right-36 rotate-180" />
+                <img src={leaf2} alt="" className="absolute w-[400px] h-[400px] opacity-20 -top-56 -left-24 rotate-90" />
+                <form className="flex flex-col gap-4 w-[80%] sm:w-[80%] md:w-[50%] lg:w-[100%] border-2 shadow-md shadow-darkBrown 
+            border-accentGreen p-10 rounded-xl min-w-[300px] z-10" onSubmit={submitHandler}>
 
                     <div className="flex flex-col justify-between gap-3 items-center w-[100%] lg:flex-row lg:gap-4">
                         <label htmlFor="Firstname" className="text-gray-300 flex flex-col gap-2 w-[100%]">Firstname *
@@ -268,20 +272,12 @@ const RegisterPage = (props) => {
                     </div>
                 </form>
 
-                <div className="w-[50%] hidden md:flex lg:flex flex-col items-center">
-                   Kisaantra
+                <div className="w-[100%] hidden sm:hidden md:flex lg:flex xl:flex 2xl:flex flex-col items-center justify-center">
+                    <h1 className="text-4xl">AgriSetu</h1>
 
-                    <h2 className='text-[#b5b5b5a4] bg-clip-text inline-block animate-shine'
-                        style={{
-                            backgroundImage: 'linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 60%)',
-                            backgroundSize: '200% 100%',
-                            WebkitBackgroundClip: 'text',
-                            animationDuration: '5s'
-                        }}>
+                    <h2 className='text-cream flex justify-center items-center'>
                         Ask AgriSetu | Increase your Productivity and Profits
                     </h2>
-                    <img src='https://cdn.prod.website-files.com/61a05ff14c09ecacc06eec05/6720e94e1cd203b14c045522_%20Interview-Notes.jpg'
-                        alt='' className='min-w-[300px] opacity-[0.2] rounded-xl shadow-xl shadow-blue-700 mt-5' />
                 </div>
             </div >
 
