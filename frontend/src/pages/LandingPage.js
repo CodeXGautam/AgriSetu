@@ -24,7 +24,7 @@ const LandingPage = (props) => {
                 <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
             </div>
             <div className='flex w-[100%] p-5 relative mt-20 '>
-                <div className='flex flex-col justify-center items-center gap-3 w-[100%]'>
+                <div className='flex flex-col justify-center items-center gap-3 w-[100%] z-10'>
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -67,6 +67,15 @@ const LandingPage = (props) => {
                     src="https://lottie.host/7f7a8c25-9ca8-4bf1-a2b0-cedc4ef9de7d/kupgc4LV4I.lottie"
                     loop
                     autoplay
+                    alternate
+                    className='absolute right-0 bottom-0'
+                />
+                  <DotLottieReact
+                    src="https://lottie.host/7f7a8c25-9ca8-4bf1-a2b0-cedc4ef9de7d/kupgc4LV4I.lottie"
+                    loop
+                    autoplay
+                    alternate
+                    className='absolute left-[-20] bottom-0'
                 />
             </div>
 
