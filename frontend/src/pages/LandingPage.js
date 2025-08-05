@@ -2,6 +2,10 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
+import leaf1 from '../images/leaf1.webp';
+import leaf2 from '../images/leaf2.png';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 
 const LandingPage = (props) => {
 
@@ -16,9 +20,11 @@ const LandingPage = (props) => {
 
     return (
         <div className="flex flex-col bg-gradient-to-r from-deepGreen to-gradientLight text-text justify-center text-center mx-auto w-full gap-10 p-5">
-            <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-            <div className='flex w-[100%] p-5 justify-evenly'>
-                <div className='flex flex-col justify-center items-center gap-3 w-[80%]'>
+            <div className='fixed top-0 w-[100%] z-[100]'>
+                <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+            </div>
+            <div className='flex w-[100%] p-5 relative mt-20 '>
+                <div className='flex flex-col justify-center items-center gap-3 w-[100%]'>
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -45,6 +51,7 @@ const LandingPage = (props) => {
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.5, delay: 0.8 }}
+                        whileHover={{ scale: 1.02 }}
                         className='bg-accentGreen text-white p-4 rounded-xl hover:bg-lightGreen transition-all 
                     duration-300 shadow-lg shadow-black'
                         onClick={clickHandler}>
@@ -52,6 +59,15 @@ const LandingPage = (props) => {
                     </motion.button>
                 </div>
 
+                {/* <div className='absolute bottom-0 left-0'>
+                    <img src={leaf1}
+                    alt=''/>
+                </div> */}
+                <DotLottieReact
+                    src="https://lottie.host/7f7a8c25-9ca8-4bf1-a2b0-cedc4ef9de7d/kupgc4LV4I.lottie"
+                    loop
+                    autoplay
+                />
             </div>
 
             {/* <div className='h-[2px] w-full bg-blue-950'></div> */}
@@ -89,7 +105,7 @@ const LandingPage = (props) => {
                 </div>
             </motion.div>
 
-        <Footer/>
+            <Footer />
         </div>
     )
 }
