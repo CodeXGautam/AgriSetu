@@ -115,28 +115,28 @@ const LoginPage = (props) => {
 
 
    return (
-      <div className="flex flex-col">
+      <div className="flex flex-col bg-gradient-to-r from-deepGreen to-gradientLight text-cream mt-5">
 
          <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
 
          <div className='flex min-h-screen justify-center items-center'>
-            <form className='flex flex-col gap-5 border-2 shadow-md shadow-blue-900 w-[70%] max-w-[600px]
-            border-slate-900 p-10 rounded-xl min-w-[300px]' onSubmit={submitHandler}>
+            <form className='flex flex-col gap-5 border-2 shadow-md shadow-darkBrown w-[70%] max-w-[600px]
+            border-accentGreen p-10 rounded-xl min-w-[300px]' onSubmit={submitHandler}>
 
-               <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 text-center'>Welcome Back !</h1>
+               <h1 className='text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-cream text-center'>Welcome Back !</h1>
 
-               <label htmlFor="Email" className="text-gray-300 flex flex-col gap-2 w-[100%]">Email *
+               <label htmlFor="Email" className="text-cream flex flex-col gap-2 w-[100%]">Email *
                   <input type="email" value={formData.email} id="email" name="email"
-                     className="flex justify-center text-gray-300 text-sm items-center border-2 border-gray-800 rounded-xl bg-slate-900 p-3"
+                     className="flex justify-center text-cream text-sm items-center border-2 border-accentGreen rounded-xl bg-darkGreen p-3"
                      onChange={changeHandler} />
                </label>
 
-               <label htmlFor="Password" className="text-gray-300 flex flex-col gap-2 w-[100%]">
+               <label htmlFor="Password" className="text-cream flex flex-col gap-2 w-[100%]">
                   Password *
                   {!showpassword &&
                      <div className="relative">
                         <input type="password" onChange={changeHandler} name="password" id="password" value={formData.password}
-                           className="flex justify-center text-gray-300 text-sm items-center w-[100%] border-2 border-gray-800 rounded-xl bg-slate-900 p-3" />
+                           className="flex justify-center text-cream text-sm items-center w-[100%] border-2 border-accentGreen rounded-xl bg-darkGreen p-3" />
                         <FaRegEyeSlash onClick={passHandler} className="absolute right-4 bottom-4" />
                      </div>
                   }
@@ -144,33 +144,33 @@ const LoginPage = (props) => {
                   {showpassword &&
                      <div className='relative'>
                         <input type="text" onChange={changeHandler} name="password" id="password" value={formData.password}
-                           className="flex justify-center text-gray-300 text-sm items-center w-[100%] border-2 border-gray-800 rounded-xl bg-slate-900 p-3" />
+                           className="flex justify-center text-cream text-sm items-center w-[100%] border-2 border-accentGreen rounded-xl bg-darkGreen p-3" />
                         <FaRegEye onClick={passHandler} className="absolute right-4 bottom-4" />
                      </div>
                   }
                </label>
 
                <div className="flex gap-2 items-center">
-                  <span className="text-gray-300">Do not have an account ?</span>
-                  <NavLink to='/register' className='text-blue-500 font-bold hover:text-blue-600 hover:scale-[1.05]'>
+                  <span className="text-cream">Do not have an account ?</span>
+                  <NavLink to='/register' className='text-green-700 font-bold hover:text-lightBrown hover:scale-[1.05]'>
                      Register
                   </NavLink>
                </div>
 
-               <button className="bg-blue-950 p-4 rounded-xl flex justify-center items-center text-gray-200 
-                hover:bg-blue-800 transition-all duration-200 hover:scale-[1.05] hover:text-gray-100 shadow-lg shadow-blue-500">
+               <button className="bg-accentGreen p-4 rounded-xl flex justify-center items-center text-cream 
+                hover:bg-darkBrown transition-all duration-200 hover:scale-[1.05] shadow-lg shadow-darkBrown">
                   Log In
                </button>
 
                <div className="flex items-center gap-2">
-                  <span className="w-[100%] h-[1px] bg-slate-800"></span>
-                  <span className="flex text-sm text-gray-400">OR</span>
-                  <span className="w-[100%] h-[1px] bg-slate-800"></span>
+                  <span className="w-[100%] h-[1px] bg-cream"></span>
+                  <span className="flex text-sm text-cream">OR</span>
+                  <span className="w-[100%] h-[1px] bg-cream"></span>
                </div>
 
                <div
-                  className="bg-blue-950 p-4 rounded-xl flex justify-center cursor-pointer items-center gap-4 text-gray-200 \
-                     hover:bg-blue-800 transition-all duration-200 hover:scale-[1.05] hover:text-gray-100 shadow-lg shadow-blue-500"
+                  className="bg-accentGreen p-4 rounded-xl flex justify-center cursor-pointer items-center gap-4 text-cream \
+                     hover:bg-darkBrown transition-all duration-200 hover:scale-[1.05] shadow-lg shadow-darkBrown"
                   onClick={() => googleLogin()}
                >
                   Log In with Google <FcGoogle />
