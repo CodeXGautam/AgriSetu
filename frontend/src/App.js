@@ -44,7 +44,7 @@ const App = () => {
 
 
   return (
-    <div className="bg-slate-950 min-h-screen flex flex-col relative">
+    <div className="bg-gradient-to-r from-deepGreen to-gradientLight min-h-screen flex flex-col relative">
 
       <Routes>
         <Route path='/' element={<LandingPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />} />
