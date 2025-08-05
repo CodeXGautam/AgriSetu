@@ -7,6 +7,7 @@ import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import toast from "react-hot-toast";
 import { useGoogleLogin } from '@react-oauth/google';
+import leaf2 from '../images/leaf2.png';
 
 
 const LoginPage = (props) => {
@@ -115,7 +116,9 @@ const LoginPage = (props) => {
 
 
    return (
-      <div className="flex flex-col bg-gradient-to-r from-deepGreen to-gradientLight text-cream mt-5">
+      <div className="flex flex-col bg-gradient-to-r from-deepGreen to-gradientLight text-cream mt-5 relative overflow-hidden">
+         <img src={leaf2} alt="" className="absolute w-[400px] h-[400px] opacity-20 -top-16 -right-44 rotate-180"/>
+         <img src={leaf2} alt="" className="absolute w-[400px] h-[400px] opacity-20 -top-28 -left-24 rotate-90"/>
 
          <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
 
