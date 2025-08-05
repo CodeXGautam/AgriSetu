@@ -35,7 +35,7 @@ const Navbar = (props) => {
 
 
     return (
-        <div className="flex justify-between bg-gradient-to-l from-deepGreen to-gradientLight py-3 w-[90%] mx-auto border-b-2 border-gradientLight rounded-full shadow-md shadow-black px-10 ">
+        <div className="flex justify-between bg-gradient-to-l from-deepGreen to-gradientLight py-3 w-[90%] mx-auto border-b-2 border-gradientLight rounded-full shadow-md shadow-black px-10 z-10 ">
             <Link to='/' className="flex justify-center items-center text-2xl font-extrabold text-cream hover:text-lightBrown 
          cursor-pointer">
                 AgriSetu
