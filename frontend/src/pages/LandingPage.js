@@ -2,8 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
-import leaf1 from '../images/leaf1.webp';
-import leaf2 from '../images/leaf2.png';
+import leaf1 from '../images/leaf1.png';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 
@@ -19,11 +18,12 @@ const LandingPage = (props) => {
     }
 
     return (
-        <div className="flex flex-col bg-gradient-to-r from-deepGreen to-gradientLight text-text justify-center text-center mx-auto w-full gap-10 p-5">
-            <div className='fixed top-0 w-[100%] z-[100]'>
+        <div className="flex flex-col bg-gradient-to-r from-deepGreen to-gradientLight text-text justify-center 
+        text-center mx-auto w-full gap-10 p-5 overflow-hidden">
+            <div className='fixed top-0 w-[100%] z-[100] mx-auto'>
                 <Navbar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
             </div>
-            <div className='flex w-[100%] p-5 relative mt-20 '>
+            <div className='flex w-[100%] p-5 relative min-h-screen min-w-[400px]'>
                 <div className='flex flex-col justify-center items-center gap-3 w-[100%] z-10'>
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
@@ -68,15 +68,17 @@ const LandingPage = (props) => {
                     loop
                     autoplay
                     alternate
-                    className='absolute right-0 bottom-0'
+                    className='absolute -right-32 bottom-0 -rotate-45'
                 />
                   <DotLottieReact
                     src="https://lottie.host/7f7a8c25-9ca8-4bf1-a2b0-cedc4ef9de7d/kupgc4LV4I.lottie"
                     loop
                     autoplay
                     alternate
-                    className='absolute left-[-20] bottom-0'
+                    className='absolute -left-32 bottom-0 rotate-45'
                 />
+                <img src={leaf1} alt='' className='w-[450px] h-[450px] absolute rotate-180 -top-24 -right-32 opacity-20'/>
+                <img src={leaf1} alt='' className='w-[450px] h-[450px] absolute rotate-90 -top-24 -left-32 opacity-20'/>
             </div>
 
             {/* <div className='h-[2px] w-full bg-blue-950'></div> */}
