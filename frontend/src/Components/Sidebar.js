@@ -103,8 +103,8 @@ const Sidebar = (props) => {
     return (
         <div className="">
             {/* mobile view  sidebar */}
-            <div className="menu w-[23%] min-w-[240px] fixed left-0 top-0 h-screen bg-slate-900 p-5 rounded-md flex flex-col
-               justify-between items-center shadow-md shadow-blue-800 md:hidden lg:hidden xl:hidden 2xl:hidden
+            <div className="menu w-[23%] min-w-[240px] fixed left-0 top-0 h-screen bg-darkGreen p-5 rounded-md flex flex-col
+               justify-between items-center shadow-md shadow-darkBrown md:hidden lg:hidden xl:hidden 2xl:hidden
                transition-all duration-300 ease-in-out z-[1000]">
                 <div className="flex flex-col gap-5 w-[100%]">
 
@@ -142,34 +142,34 @@ const Sidebar = (props) => {
                         <span className="text-white font-semibold flex gap-2 justify-center"> Hi <span>{userInfo.username}</span></span>
                     </div>
 
-                    <NavLink to='/home' className="flex justify-start items-center text-slate-300 hover:text-white
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
+                    <NavLink to='/home' className="flex justify-start items-center text-cream hover:text-lightBrown
+                    hover:bg-gradient-to-r from-deepGreen to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
                         <IoHome /> Home
                     </NavLink>
-                    <NavLink to='/scan' className="flex justify-start items-center text-slate-300 hover:text-white
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
+                    <NavLink to='/scan' className="flex justify-start items-center text-cream hover:text-lightBrown
+                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
                         <DiCode /> Scan
                     </NavLink>
-                    <NavLink to='/crops-prediction' className="flex justify-start items-center text-slate-300 hover:text-white
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
+                    <NavLink to='/crops-prediction' className="flex justify-start items-center text-cream hover:text-lightBrown
+                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
                         <SlCalender /> Crops
                     </NavLink>
-                    <NavLink to='/settings' className="flex justify-start items-center text-slate-300 hover:text-white
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
+                    <NavLink to='/settings' className="flex justify-start items-center text-cream hover:text-lightBrown
+                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
                         <IoSettingsOutline /> Settings
                     </NavLink>
                 </div>
 
                 <button className="flex justify-center items-center text-red-500 hover:text-red-600
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%]"
+                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%]"
                     onClick={logoutHandler}>
                     Logout
                 </button>
             </div>
 
             {/* web view Sidebar */}
-            <div className="w-[25%] min-w-[220px] h-screen bg-slate-900 p-5 rounded-md  flex-col
-               justify-between items-center shadow-md shadow-blue-800 hidden md:flex lg:flex xl:flex 2xl:flex
+            <div className="w-[25%] min-w-[220px] h-screen bg-darkGreen p-5 rounded-md  flex-col
+               justify-between items-center shadow-md shadow-darkBrown hidden md:flex lg:flex xl:flex 2xl:flex
                transition-all duration-300 ease-in-out">
                 <div className="flex flex-col gap-5 w-[100%]">
 
@@ -196,28 +196,28 @@ const Sidebar = (props) => {
                     </div>
 
 
-                    <NavLink to='/home' className="flex justify-start items-center text-slate-300 hover:text-white
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4">
+                    <NavLink to='/home' className="flex justify-start items-center text-cream hover:text-lightBrown
+                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
                         <IoHome /> Home
                     </NavLink>
-                    <NavLink to='/scan' className="flex justify-start items-center text-slate-300 hover:text-white
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4">
+                    <NavLink to='/scan' className="flex justify-start items-center text-cream hover:text-lightBrown
+                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
                         <DiCode /> Scan
                     </NavLink>
 
-                    <NavLink to='/crops-prediction' className="flex justify-start items-center text-slate-300 hover:text-white
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4">
+                    <NavLink to='/crops-prediction' className="flex justify-start items-center text-cream hover:text-lightBrown
+                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
                         <SlCalender /> Crops
                     </NavLink>
 
-                    <NavLink to='/settings' className="flex justify-start items-center text-slate-300 hover:text-white
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%] gap-4">
+                    <NavLink to='/settings' className="flex justify-start items-center text-cream hover:text-lightBrown
+                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
                         <IoSettingsOutline /> Settings
                     </NavLink>
                 </div>
 
                 <button className="flex justify-center items-center text-red-500 hover:text-red-600
-                    hover:bg-slate-800 rounded-lg p-2 cursor-pointer w-[100%]"
+                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%]"
                     onClick={logoutHandler}>
                     Logout
                 </button>
