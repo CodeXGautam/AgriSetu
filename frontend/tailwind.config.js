@@ -20,6 +20,15 @@ module.exports = {
         deepGreen: '#1D2E28', /* Darker Green */
         gradientLight: '#0F5132' /* Slightly darker shade for gradient */
       },
+      animation: {
+        shine: 'shine 2s infinite linear alternate',
+      },
+      keyframes: {
+        shine: {
+          '0%': { backgroundPosition: '0% 50%' },
+          '100%': { backgroundPosition: '100% 50%' },
+        },
+      },
     },
   },
   plugins: [],
