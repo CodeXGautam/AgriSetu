@@ -9,7 +9,7 @@ import { upload } from './middleware/multer.js';
 const app = express();
 
 app.use(cors({
-  origin:['https://vocintera.onrender.com', 'http://localhost:3000'],
+  origin:['http://localhost:3000','https://img.favpng.com/22/20/12/crop-clip-art-png-favpng-nqpSRgidPzwXf1UYKddBUx5uM.jpg'],
   credentials: true,
   exposedHeaders: ['set-cookie']
 }));
