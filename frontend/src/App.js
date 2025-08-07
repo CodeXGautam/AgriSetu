@@ -3,6 +3,7 @@ import LandingPage from './pages/LandingPage';
 import { useState, useEffect } from 'react';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import Home from './pages/Home';
 
 
 const App = () => {
@@ -50,6 +51,10 @@ const App = () => {
         <Route path='/' element={<LandingPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />} />
         <Route path='/register' element={<RegisterPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />} />
         <Route path='/login' element={<LoginPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} />} />
+        {
+          loggedIn && 
+          <Route path='/home' element={<Home loggedIn={loggedIn} setLoggedIn={setLoggedIn} />} />
+        }
       </Routes>
 
     </div>
