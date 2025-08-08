@@ -6,6 +6,7 @@ import Footer from '../Components/Footer';
 import LoadingAnimation from '../Components/LoadingAnimation';
 import leaf1 from '../images/leaf1.png';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { FaRobot, FaLeaf, FaNewspaper, FaStore, FaCloudSun, FaCamera, FaArrowRight } from 'react-icons/fa';
 
 const LandingPage = (props) => {
     const loggedIn = props.loggedIn;
@@ -91,7 +92,7 @@ const LandingPage = (props) => {
                         initial={{ opacity: 0, y: -30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-cream"
+                        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-cream leading-tight"
                     >
                         Grow Smart
                     </motion.h1>
@@ -99,7 +100,7 @@ const LandingPage = (props) => {
                         initial={{ opacity: 0, y: -30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-cream"
+                        className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-cream leading-tight px-2"
                     >
                         Increase your Productivity and Profits
                     </motion.h2>
@@ -107,7 +108,7 @@ const LandingPage = (props) => {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.6 }}
-                        className="text-sm sm:text-base md:text-lg lg:text-xl text-cream max-w-2xl"
+                        className="text-base sm:text-lg md:text-xl lg:text-2xl text-cream max-w-3xl leading-relaxed"
                     >
                         AI enabled crops prediction
                     </motion.p>
@@ -115,7 +116,7 @@ const LandingPage = (props) => {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.8 }}
-                        className="text-sm sm:text-base md:text-lg lg:text-xl text-cream max-w-2xl"
+                        className="text-base sm:text-lg md:text-xl lg:text-2xl text-cream max-w-3xl leading-relaxed"
                     >
                         Get the best crops for your land
                     </motion.p>
@@ -125,7 +126,7 @@ const LandingPage = (props) => {
                         transition={{ duration: 0.8, delay: 1 }}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="bg-accentGreen text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl hover:bg-lightGreen transition-all duration-300 shadow-lg shadow-black text-base sm:text-lg font-semibold"
+                        className="bg-accentGreen text-white px-8 py-4 sm:px-10 sm:py-5 rounded-xl hover:bg-lightGreen transition-all duration-300 shadow-lg shadow-black text-lg sm:text-xl font-semibold"
                         onClick={clickHandler}
                     >
                         Get Started
@@ -133,7 +134,7 @@ const LandingPage = (props) => {
                 </div>
             </section>
 
-            {/* Features Section */}
+            {/* AI Chatbot Section */}
             <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
@@ -142,70 +143,306 @@ const LandingPage = (props) => {
                     viewport={{ once: true }}
                     className="max-w-6xl mx-auto"
                 >
-                    <motion.div
+                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            viewport={{ once: true }}
+                            className="text-center lg:text-left"
+                        >
+                            <div className="flex justify-center lg:justify-start mb-6">
+                                <div className="bg-accentGreen p-4 rounded-full">
+                                    <FaRobot className="text-3xl text-cream" />
+                                </div>
+                            </div>
+                            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-cream mb-4 leading-tight">
+                                AI Chatbot for Farmers
+                            </h3>
+                            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-cream mb-6 leading-relaxed">
+                                Get instant solutions to your farming problems. Our AI chatbot provides real-time assistance for crop management, pest control, and agricultural best practices.
+                            </p>
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="bg-accentGreen text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl hover:bg-lightGreen transition-all duration-300 shadow-lg font-semibold text-base sm:text-lg"
+                                onClick={clickHandler}
+                            >
+                                Start Chat
+                            </motion.button>
+                        </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                            viewport={{ once: true }}
+                            className="relative"
+                        >
+                            <img 
+                                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                                alt="AI Chatbot" 
+                                className="w-full rounded-xl shadow-2xl"
+                            />
+                        </motion.div>
+                    </div>
+                </motion.div>
+            </section>
+
+            {/* Crop Recommendations Section */}
+            <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 bg-darkGreen/30">
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true }}
+                    className="max-w-6xl mx-auto"
+                >
+                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            viewport={{ once: true }}
+                            className="relative order-2 lg:order-1"
+                        >
+                            <img 
+                                src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                                alt="Crop Recommendations" 
+                                className="w-full rounded-xl shadow-2xl"
+                            />
+                        </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                            viewport={{ once: true }}
+                            className="text-center lg:text-left order-1 lg:order-2"
+                        >
+                            <div className="flex justify-center lg:justify-start mb-6">
+                                <div className="bg-accentGreen p-4 rounded-full">
+                                    <FaLeaf className="text-3xl text-cream" />
+                                </div>
+                            </div>
+                            <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-cream mb-4 leading-tight">
+                                Best Crops for Your Location
+                            </h3>
+                            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-cream mb-6 leading-relaxed">
+                                Get personalized crop recommendations based on your location, soil type, and climate. Includes sale pricing and profitability analysis to maximize your returns.
+                            </p>
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="bg-accentGreen text-white px-6 py-3 sm:px-8 sm:py-4 rounded-xl hover:bg-lightGreen transition-all duration-300 shadow-lg font-semibold text-base sm:text-lg"
+                                onClick={clickHandler}
+                            >
+                                Get Recommendations
+                            </motion.button>
+                        </motion.div>
+                    </div>
+                </motion.div>
+            </section>
+
+            {/* News & Marketplace Section */}
+            <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true }}
+                    className="max-w-6xl mx-auto"
+                >
+                    <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+                        {/* Agriculture News */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            viewport={{ once: true }}
+                            className="bg-darkGreen/30 rounded-xl p-6 sm:p-8 border-2 border-accentGreen"
+                        >
+                            <div className="flex items-center mb-6">
+                                <div className="bg-accentGreen p-3 rounded-full mr-4">
+                                    <FaNewspaper className="text-2xl text-cream" />
+                                </div>
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-cream leading-tight">
+                                    Agriculture News
+                                </h3>
+                            </div>
+                            <p className="text-base sm:text-lg md:text-xl text-cream mb-6 leading-relaxed">
+                                Stay updated with the latest agricultural trends, government policies, and market insights that affect your farming business.
+                            </p>
+                            <img 
+                                src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                                alt="Agriculture News" 
+                                className="w-full h-48 object-cover rounded-lg mb-4"
+                            />
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="bg-accentGreen text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-lightGreen transition-all duration-300 font-semibold text-sm sm:text-base"
+                                onClick={clickHandler}
+                            >
+                                Read Latest News
+                            </motion.button>
+                        </motion.div>
+
+                        {/* Marketplace */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                            viewport={{ once: true }}
+                            className="bg-darkGreen/30 rounded-xl p-6 sm:p-8 border-2 border-accentGreen"
+                        >
+                            <div className="flex items-center mb-6">
+                                <div className="bg-accentGreen p-3 rounded-full mr-4">
+                                    <FaStore className="text-2xl text-cream" />
+                                </div>
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-cream leading-tight">
+                                    Crop Essentials Marketplace
+                                </h3>
+                            </div>
+                            <p className="text-base sm:text-lg md:text-xl text-cream mb-6 leading-relaxed">
+                                Buy and sell seeds, fertilizers, tools, and other agricultural essentials. Connect with verified suppliers and get the best prices.
+                            </p>
+                            <img 
+                                src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                                alt="Marketplace" 
+                                className="w-full h-48 object-cover rounded-lg mb-4"
+                            />
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="bg-accentGreen text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-lightGreen transition-all duration-300 font-semibold text-sm sm:text-base"
+                                onClick={clickHandler}
+                            >
+                                Explore Marketplace
+                            </motion.button>
+                        </motion.div>
+                    </div>
+                </motion.div>
+            </section>
+
+            {/* Weather & Disease Detection Section */}
+            <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 bg-darkGreen/30">
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true }}
+                    className="max-w-6xl mx-auto"
+                >
+                    <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+                        {/* Weather Alerts */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            viewport={{ once: true }}
+                            className="bg-darkGreen/30 rounded-xl p-6 sm:p-8 border-2 border-accentGreen"
+                        >
+                            <div className="flex items-center mb-6">
+                                <div className="bg-accentGreen p-3 rounded-full mr-4">
+                                    <FaCloudSun className="text-2xl text-cream" />
+                                </div>
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-cream leading-tight">
+                                    Weather Alerts
+                                </h3>
+                            </div>
+                            <p className="text-base sm:text-lg md:text-xl text-cream mb-6 leading-relaxed">
+                                Get real-time weather updates and alerts for your location. Plan your farming activities based on accurate weather forecasts.
+                            </p>
+                            <img 
+                                src="https://images.unsplash.com/photo-1592210454359-9043f067919b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                                alt="Weather Alerts" 
+                                className="w-full h-48 object-cover rounded-lg mb-4"
+                            />
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="bg-accentGreen text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-lightGreen transition-all duration-300 font-semibold text-sm sm:text-base"
+                                onClick={clickHandler}
+                            >
+                                Check Weather
+                            </motion.button>
+                        </motion.div>
+
+                        {/* Disease Detection */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                            viewport={{ once: true }}
+                            className="bg-darkGreen/30 rounded-xl p-6 sm:p-8 border-2 border-accentGreen"
+                        >
+                            <div className="flex items-center mb-6">
+                                <div className="bg-accentGreen p-3 rounded-full mr-4">
+                                    <FaCamera className="text-2xl text-cream" />
+                                </div>
+                                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-cream leading-tight">
+                                    Disease Detection
+                                </h3>
+                            </div>
+                            <p className="text-base sm:text-lg md:text-xl text-cream mb-6 leading-relaxed">
+                                Upload images of your crops to get instant AI-powered disease detection and treatment recommendations.
+                            </p>
+                            <img 
+                                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+                                alt="Disease Detection" 
+                                className="w-full h-48 object-cover rounded-lg mb-4"
+                            />
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="bg-accentGreen text-white px-4 py-2 sm:px-6 sm:py-3 rounded-lg hover:bg-lightGreen transition-all duration-300 font-semibold text-sm sm:text-base"
+                                onClick={clickHandler}
+                            >
+                                Upload Image
+                            </motion.button>
+                        </motion.div>
+                    </div>
+                </motion.div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
+                <motion.div
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true }}
+                    className="max-w-4xl mx-auto text-center"
+                >
+                    <motion.h2
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                         viewport={{ once: true }}
-                        className="text-center mb-12 sm:mb-16"
+                        className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-cream mb-6 leading-tight"
                     >
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-cream mb-4">
-                            Multiple Domains
-                        </h2>
-                        <p className="text-base sm:text-lg md:text-xl text-cream">
-                            Choose from different Domains
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
+                        Ready to Transform Your Farming?
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
                         viewport={{ once: true }}
-                        className="relative border-2 border-accentGreen rounded-xl p-6 sm:p-8 md:p-12 lg:p-16 xl:p-20 overflow-hidden"
+                        className="text-base sm:text-lg md:text-xl lg:text-2xl text-cream mb-8 max-w-3xl mx-auto leading-relaxed"
                     >
-                        <motion.img 
-                            src="https://cdn.prod.website-files.com/61a05ff14c09ecacc06eec05/6720e94e1cd203b14c045522_%20Interview-Notes.jpg"
-                            alt="Productivity" 
-                            className="w-full max-w-4xl mx-auto opacity-20 rounded-xl shadow-xl shadow-accentGreen pointer-events-none"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 0.2, scale: 1 }}
-                            transition={{ duration: 1 }}
-                            viewport={{ once: true }}
-                        />
-                        <div className="absolute inset-0 flex flex-col justify-center items-center text-center z-10 p-4">
-                            <motion.h3
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, delay: 0.6 }}
-                                viewport={{ once: true }}
-                                className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-cream mb-4"
-                            >
-                                Ace your Productivity and Yield
-                            </motion.h3>
-                            <motion.p
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, delay: 0.8 }}
-                                viewport={{ once: true }}
-                                className="text-xs sm:text-sm md:text-base lg:text-lg font-semibold text-cream mb-6 max-w-2xl"
-                            >
-                                AI enabled personalised crops and disease detection
-                            </motion.p>
-                            <motion.button
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ duration: 0.8, delay: 1 }}
-                                viewport={{ once: true }}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="bg-accentGreen text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl hover:bg-darkBrown transition-all duration-300 shadow-md shadow-darkBrown font-bold text-sm sm:text-base"
-                                onClick={clickHandler}
-                            >
-                                Get Started
-                            </motion.button>
-                        </div>
-                    </motion.div>
+                        Join thousands of farmers who are already using AgriSetu to increase their productivity and profits with AI-powered solutions.
+                    </motion.p>
+                    <motion.button
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8, delay: 0.6 }}
+                        viewport={{ once: true }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="bg-accentGreen text-white px-8 py-4 sm:px-10 sm:py-5 rounded-xl hover:bg-lightGreen transition-all duration-300 shadow-lg shadow-black text-lg sm:text-xl font-semibold flex items-center justify-center mx-auto gap-2"
+                        onClick={clickHandler}
+                    >
+                        Get Started Now <FaArrowRight />
+                    </motion.button>
                 </motion.div>
             </section>
 
