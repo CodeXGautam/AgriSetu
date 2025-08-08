@@ -5,11 +5,9 @@ import LandingPage from './pages/LandingPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import Home from './pages/Home';
-import LoadingAnimation from './Components/LoadingAnimation';
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   const refreshToken = async () => {
     try {
@@ -42,16 +40,7 @@ const App = () => {
 
   useEffect(() => {
     refreshToken();
-    // Simulate initial loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
   }, []);
-
-  if (isLoading) {
-    return <LoadingAnimation />;
-  }
 
   return (
     <div className="bg-gradient-to-r from-deepGreen to-gradientLight min-h-screen flex flex-col relative">
