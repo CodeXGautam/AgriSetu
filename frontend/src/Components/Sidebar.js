@@ -8,22 +8,27 @@ import { SlCalender } from "react-icons/sl";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { BsFillPersonFill } from "react-icons/bs";
-
-
+import { motion } from 'framer-motion';
+import { 
+    FaRobot, 
+    FaLeaf, 
+    FaNewspaper, 
+    FaStore, 
+    FaCloudSun, 
+    FaCamera, 
+    FaChartLine,
+    FaSignOutAlt,
+    FaUserCircle
+} from 'react-icons/fa';
 
 const Sidebar = (props) => {
-
     const setLoggedIn = props.setLoggedIn;
-
     const [menuBar, setMenuBar] = useState(true);
-
     const [userInfo, setUserInfo] = useState({
         username: '',
         email: '',
         image: '',
-        // interview:'',
     });
-
 
     const fetchUserInfo = async () => {
         try {
@@ -36,14 +41,12 @@ const Sidebar = (props) => {
             });
 
             const data = await res.json();
-
             const user = data.user;
 
             setUserInfo({
                 username: user.firstname,
                 email: user.email,
                 image: user.avatar,
-                // interview:user.interview,
             })
 
         } catch (error) {
@@ -55,20 +58,19 @@ const Sidebar = (props) => {
         fetchUserInfo();
     }, []);
 
-
     const navigate = useNavigate();
 
     const menuHandler = () => {
         if (menuBar === true) {
             document.querySelector('.menu').classList.add('transform', 'translate-x-[-80%]', 'bg-transparent',);
-            document.querySelector('.menu-icon').classList.add('bg-slate-500', 'text-white', 'p-2', 'rounded-full')
+            document.querySelector('.menu-icon').classList.add('bg-accentGreen', 'text-white', 'p-2', 'rounded-full')
             document.querySelector('.menu').classList.remove('shadow-md');
             document.querySelector('.menu-items').classList.remove('active');
             setMenuBar(false);
         }
         else if (menuBar === false) {
             document.querySelector('.menu').classList.remove('transform', 'translate-x-[-80%]', 'bg-transparent');
-            document.querySelector('.menu-icon').classList.remove('bg-slate-500', 'text-white', 'p-2', 'rounded-full')
+            document.querySelector('.menu-icon').classList.remove('bg-accentGreen', 'text-white', 'p-2', 'rounded-full')
             document.querySelector('.menu').classList.add('shadow-md');
             document.querySelector('.menu-items').classList.add('active');
             setMenuBar(true);
@@ -89,7 +91,7 @@ const Sidebar = (props) => {
                     }
 
                     if (response.message === "Logged out successfully") {
-                        toast.success("Logged out");
+                        toast.success("Logged out successfully");
                         navigate('/');
                         setLoggedIn(false);
                     }
@@ -100,125 +102,105 @@ const Sidebar = (props) => {
         }
     }
 
+    const menuItems = [
+        { to: '/home', icon: <IoHome />, label: 'Dashboard', color: 'text-blue-400' },
+        { to: '/chatbot', icon: <FaRobot />, label: 'AI Chatbot', color: 'text-green-400' },
+        { to: '/crops-prediction', icon: <FaLeaf />, label: 'Crop Recommendations', color: 'text-emerald-400' },
+        { to: '/news', icon: <FaNewspaper />, label: 'Agriculture News', color: 'text-orange-400' },
+        { to: '/marketplace', icon: <FaStore />, label: 'Marketplace', color: 'text-purple-400' },
+        { to: '/disease-detection', icon: <FaCamera />, label: 'Disease Detection', color: 'text-red-400' },
+        { to: '/analytics', icon: <FaChartLine />, label: 'Analytics', color: 'text-yellow-400' },
+        { to: '/settings', icon: <IoSettingsOutline />, label: 'Settings', color: 'text-gray-400' },
+    ];
+
+    const SidebarContent = ({ isMobile = false }) => (
+        <div className={`flex flex-col gap-3 w-[100%] h-full overflow-y-auto scrollbar-hide ${isMobile ? 'menu-items' : ''}`}>
+            {/* Header */}
+            <div className="flex justify-between items-center w-[100%] mb-3">
+                <h1 className='text-cream font-extrabold text-2xl sm:text-3xl flex items-center justify-center'>
+                    AgriSetu
+                </h1>
+
+                {isMobile && (
+                    <div 
+                        className="flex justify-center items-center text-xl text-cream hover:text-accentGreen cursor-pointer menu-icon p-2 rounded-full hover:bg-accentGreen/20 transition-all duration-300" 
+                        onClick={menuHandler}
+                    >
+                        {menuBar ? <RiMenuUnfold2Line /> : <RiMenuUnfoldLine />}
+                    </div>
+                )}
+            </div>
+
+            {/* User Profile */}
+            <div className="flex justify-start items-center gap-3 p-3 bg-darkGreen/30 rounded-lg border border-accentGreen/10">
+                <div className="w-[40px] h-[40px] rounded-full bg-gradient-to-r from-accentGreen to-lightGreen shadow-md shadow-accentGreen/20 flex items-center justify-center overflow-hidden">
+                    {userInfo.image ? (
+                        <img src={userInfo.image} alt="user avatar" className="w-full h-full object-cover rounded-full" />
+                    ) : (
+                        <FaUserCircle className="text-white text-2xl" />
+                    )}
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-cream font-medium text-sm">
+                        Hi, {userInfo.username || 'User'}
+                    </span>
+                </div>
+            </div>
+
+            {/* Menu Items */}
+            <div className="flex flex-col gap-1 flex-1">
+                {menuItems.map((item, index) => (
+                    <div key={item.to}>
+                        <NavLink 
+                            to={item.to} 
+                            className={({ isActive }) => `
+                                flex justify-start items-center text-cream hover:text-lightBrown
+                                rounded-lg p-2.5 cursor-pointer w-[100%] gap-3 transition-all duration-300
+                                ${isActive 
+                                    ? 'bg-gradient-to-r from-accentGreen to-lightGreen text-white shadow-md shadow-accentGreen/20' 
+                                    : 'hover:bg-accentGreen/10 hover:shadow-sm'
+                                }
+                            `}
+                        >
+                            <div className={`text-lg ${item.color}`}>
+                                {item.icon}
+                            </div>
+                            <span className="font-medium text-sm">{item.label}</span>
+                        </NavLink>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
     return (
         <div className="">
-            {/* mobile view  sidebar */}
-            <div className="menu w-[23%] min-w-[240px] fixed left-0 top-0 h-screen bg-darkGreen p-5 rounded-md flex flex-col
-               justify-between items-center shadow-md shadow-darkBrown md:hidden lg:hidden xl:hidden 2xl:hidden
-               transition-all duration-300 ease-in-out z-[1000]">
-                <div className="flex flex-col gap-5 w-[100%]">
-
-                    <div className="flex justify-between items-center w-[100%] mb-5">
-
-                        <h1 className='text-[#b5b5b5a4] bg-clip-text animate-shine font-extrabold text-3xl flex
-                            items-center justify-center'
-                            style={{
-                                backgroundImage: 'linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 60%)',
-                                backgroundSize: '200% 100%',
-                                WebkitBackgroundClip: 'text',
-                                animationDuration: '5s'
-                            }}>
-                            AgriSetu
-                        </h1>
-
-                        <div className="flex justify-center items-center text-xl text-slate-300 hover:text-white
-                         cursor-pointer menu-icon" onClick={menuHandler}>
-                            {
-                                menuBar ? <RiMenuUnfold2Line /> : <RiMenuUnfoldLine />
-                            }
-                        </div>
-
-                    </div>
-
-                    <div className="flex justify-start items-center gap-4">
-                       <span className="w-[50px] h-[50px] rounded-full bg-blue-700 shadow-md shadow-blue-500 flex items-center justify-center overflow-hidden">
-                            {userInfo.image ? (
-                                <img src={userInfo.image} alt="user avatar" className="w-full h-full object-cover rounded-full" />
-                            ) : (
-                                <BsFillPersonFill className="text-white text-3xl" />
-                            )}
-                        </span>
-                        {/* user's firstname */}
-                        <span className="text-white font-semibold flex gap-2 justify-center"> Hi <span>{userInfo.username}</span></span>
-                    </div>
-
-                    <NavLink to='/home' className="flex justify-start items-center text-cream hover:text-lightBrown
-                    hover:bg-gradient-to-r from-deepGreen to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <IoHome /> Home
-                    </NavLink>
-                    <NavLink to='/scan' className="flex justify-start items-center text-cream hover:text-lightBrown
-                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <DiCode /> Scan
-                    </NavLink>
-                    <NavLink to='/crops-prediction' className="flex justify-start items-center text-cream hover:text-lightBrown
-                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <SlCalender /> Crops
-                    </NavLink>
-                    <NavLink to='/settings' className="flex justify-start items-center text-cream hover:text-lightBrown
-                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <IoSettingsOutline /> Settings
-                    </NavLink>
+            {/* Mobile view sidebar */}
+            <div className="menu w-[23%] min-w-[240px] fixed left-0 top-0 h-screen bg-gradient-to-b from-darkGreen to-darkGreen/95 p-4 rounded-md flex flex-col justify-between items-center shadow-xl shadow-darkBrown md:hidden lg:hidden xl:hidden 2xl:hidden transition-all duration-300 ease-in-out z-[1000] border-r border-accentGreen/20">
+                <div className="flex-1 w-full overflow-hidden">
+                    <SidebarContent isMobile={true} />
                 </div>
 
-                <button className="flex justify-center items-center text-red-500 hover:text-red-600
-                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%]"
-                    onClick={logoutHandler}>
+                <button 
+                    className="flex justify-center items-center text-red-300 hover:text-red-200 hover:bg-red-500/10 rounded-lg p-2.5 cursor-pointer w-[100%] gap-2 font-medium transition-all duration-300 border border-red-500/20 hover:border-red-400/30 text-sm"
+                    onClick={logoutHandler}
+                >
+                    <FaSignOutAlt className="text-base" />
                     Logout
                 </button>
             </div>
 
-            {/* web view Sidebar */}
-            <div className="w-[25%] min-w-[220px] h-screen bg-darkGreen p-5 rounded-md  flex-col
-               justify-between items-center shadow-md shadow-darkBrown hidden md:flex lg:flex xl:flex 2xl:flex
-               transition-all duration-300 ease-in-out">
-                <div className="flex flex-col gap-5 w-[100%]">
-
-                    <h1 className='text-[#b5b5b5a4] mb-5 bg-clip-text inline-block animate-shine font-extrabold text-3xl'
-                        style={{
-                            backgroundImage: 'linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0) 60%)',
-                            backgroundSize: '200% 100%',
-                            WebkitBackgroundClip: 'text',
-                            animationDuration: '5s'
-                        }}>
-                        AgriSetu
-                    </h1>
-
-                    <div className="flex justify-start items-center gap-4">
-                        <span className="w-[50px] h-[50px] rounded-full bg-blue-700 shadow-md shadow-blue-500 flex items-center justify-center overflow-hidden">
-                            {userInfo.image ? (
-                                <img src={userInfo.image} alt="user avatar" className="w-full h-full object-cover rounded-full" />
-                            ) : (
-                                <BsFillPersonFill className="text-white text-3xl" />
-                            )}
-                        </span>
-                        {/* user's username */}
-                        <span className="text-white font-semibold flex gap-2 justify-center"> Hi <span>{userInfo.username}</span></span>
-                    </div>
-
-
-                    <NavLink to='/home' className="flex justify-start items-center text-cream hover:text-lightBrown
-                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <IoHome /> Home
-                    </NavLink>
-                    <NavLink to='/scan' className="flex justify-start items-center text-cream hover:text-lightBrown
-                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <DiCode /> Scan
-                    </NavLink>
-
-                    <NavLink to='/crops-prediction' className="flex justify-start items-center text-cream hover:text-lightBrown
-                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <SlCalender /> Crops
-                    </NavLink>
-
-                    <NavLink to='/settings' className="flex justify-start items-center text-cream hover:text-lightBrown
-                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%] gap-4 menu-items">
-                        <IoSettingsOutline /> Settings
-                    </NavLink>
+            {/* Desktop view Sidebar */}
+            <div className="w-[25%] min-w-[220px] h-screen bg-gradient-to-b from-darkGreen to-darkGreen/95 p-4 rounded-md flex flex-col justify-between items-center shadow-xl shadow-darkBrown hidden md:flex lg:flex xl:flex 2xl:flex transition-all duration-300 ease-in-out border-r border-accentGreen/20">
+                <div className="flex-1 w-full overflow-hidden">
+                    <SidebarContent />
                 </div>
 
-                <button className="flex justify-center items-center text-red-500 hover:text-red-600
-                    hover:bg-gradient-to-r hover:from-deepGreen hover:to-gradientLight rounded-lg p-2 cursor-pointer w-[100%]"
-                    onClick={logoutHandler}>
+                <button 
+                    className="flex justify-center items-center text-red-300 hover:text-red-200 hover:bg-red-500/10 rounded-lg p-2.5 cursor-pointer w-[100%] gap-2 font-medium transition-all duration-300 border border-red-500/20 hover:border-red-400/30 text-sm"
+                    onClick={logoutHandler}
+                >
+                    <FaSignOutAlt className="text-base" />
                     Logout
                 </button>
             </div>
