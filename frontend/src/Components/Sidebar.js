@@ -99,7 +99,7 @@ const Sidebar = (props) => {
 
     const menuItems = [
         { to: '/home', icon: <IoHome />, label: 'Home', color: 'text-blue-400' },
-        { to: '/chatbot', icon: <FaRobot />, label: 'AI Chatbot', color: 'text-green-400' },
+        { to: '/ai-chatbot', icon: <FaRobot />, label: 'AI Chatbot', color: 'text-green-400' },
         { to: '/disease-detection', icon: <FaCamera />, label: 'Disease Detection', color: 'text-red-400' },
         { to: '/crops-prediction', icon: <FaLeaf />, label: 'Crop Recommendations', color: 'text-emerald-400' },
         { to: '/analytics', icon: <FaChartLine />, label: 'Analytics', color: 'text-yellow-400' },
