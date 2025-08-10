@@ -1,10 +1,29 @@
 import { Routes, Route } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import LandingPage from './pages/LandingPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import Home from './pages/Home';
+
+// Lazy load components
+const AgriNews = lazy(() => import('./pages/AgriNews'));
+
+// Loading component with the same animation style
+const LoadingAnimation = () => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.3 }}
+    className="min-h-screen bg-gradient-to-r from-deepGreen to-gradientLight flex items-center justify-center"
+  >
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+      <p className="text-white text-lg">Loading...</p>
+    </div>
+  </motion.div>
+);
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -89,6 +108,21 @@ const App = () => {
                 transition={{ duration: 0.3 }}
               >
                 <Home loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+              </motion.div>
+            } />
+          )}
+          {loggedIn && (
+            <Route path='/agri-news' element={
+              <motion.div
+                key="agri-news"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Suspense fallback={<LoadingAnimation />}>
+                  <AgriNews />
+                </Suspense>
               </motion.div>
             } />
           )}
