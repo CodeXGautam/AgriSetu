@@ -2,9 +2,11 @@
 
 export const getAgricultureNews = async (req, res) => {
     try {
-        const { language = 'en' } = req.query;
+        const { language = 'en', page = 1 } = req.query;
+        const pageSize = 10; // Number of items per page
+        const startIndex = (page - 1) * pageSize;
         
-        // Get the API key from constants
+        // Get the API key from environment variables
         const apiKey = process.env.NEWS_API_KEY;
         
         if (!apiKey || apiKey === 'your_serpapi_key_here') {
@@ -14,7 +16,7 @@ export const getAgricultureNews = async (req, res) => {
             });
         }
 
-        const url = `https://serpapi.com/search.json?engine=google_news&q=agriculture&gl=in&hl=${language}&api_key=${apiKey}`;
+        const url = `https://serpapi.com/search.json?engine=google_news&q=agriculture&gl=in&hl=${language}&api_key=${apiKey}&start=${startIndex}&num=${pageSize}`;
         
         const response = await fetch(url);
         
@@ -28,12 +30,24 @@ export const getAgricultureNews = async (req, res) => {
             return res.status(200).json({
                 success: true,
                 data: data.news_results,
+                pagination: {
+                    currentPage: parseInt(page),
+                    pageSize: pageSize,
+                    totalResults: data.search_information?.total_results || 0,
+                    hasMore: data.news_results.length === pageSize
+                },
                 message: 'News fetched successfully'
             });
         } else {
             return res.status(200).json({
                 success: true,
                 data: [],
+                pagination: {
+                    currentPage: parseInt(page),
+                    pageSize: pageSize,
+                    totalResults: 0,
+                    hasMore: false
+                },
                 message: 'No news found'
             });
         }
