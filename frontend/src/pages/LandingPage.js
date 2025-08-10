@@ -40,7 +40,9 @@ const LandingPage = (props) => {
                 <motion.img 
                     src={leaf1} 
                     alt="" 
-                    className="absolute w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] md:w-[160px] md:h-[160px] lg:w-[200px] lg:h-[200px] rotate-180 -top-4 -right-2 sm:-top-6 sm:-right-4 md:-top-8 md:-right-6 lg:-top-10 lg:-right-8 opacity-20 pointer-events-none"
+                    className="absolute w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] md:w-[160px] md:h-[160px] lg:w-[200px] lg:h-[200px] 
+                     -top-4 -right-2 sm:-top-6 sm:-right-4 md:-top-8 md:-right-6 lg:-top-10 lg:-right-8 
+                     opacity-20 pointer-events-none"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 0.2, scale: 1 }}
                     transition={{ duration: 1, delay: 0.5 }}
@@ -48,7 +50,9 @@ const LandingPage = (props) => {
                 <motion.img 
                     src={leaf1} 
                     alt="" 
-                    className="absolute w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] md:w-[160px] md:h-[160px] lg:w-[200px] lg:h-[200px] rotate-90 -top-4 -left-2 sm:-top-6 sm:-left-4 md:-top-8 md:-left-6 lg:-top-10 lg:-left-8 opacity-20 pointer-events-none"
+                    className="absolute w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] md:w-[160px] md:h-[160px] lg:w-[200px] lg:h-[200px] 
+                    -top-4 -left-2 sm:-top-6 sm:-left-4 md:-top-8 md:-left-6 lg:-top-10 lg:-left-8 
+                    opacity-20 pointer-events-none rotate-90"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 0.2, scale: 1 }}
                     transition={{ duration: 1, delay: 0.7 }}
