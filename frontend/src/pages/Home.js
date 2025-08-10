@@ -14,6 +14,9 @@ const Home = (props) => {
     const [newsData, setNewsData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [location, setLocation] = useState(null);
+    const [locationError, setLocationError] = useState(null);
+    const [locationLoading, setLocationLoading] = useState(false);
 
     // Fetch news from the API
     const fetchNews = async () => {
@@ -26,13 +29,13 @@ const Home = (props) => {
                     'Content-Type': 'application/json'
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const output = await response.json();
-            
+
             if (output.success && output.data && output.data.length > 0) {
                 // Take first 5 news items for slideshow
                 const slideshowNews = output.data.slice(0, 5).map((news, index) => ({
@@ -74,7 +77,7 @@ const Home = (props) => {
     // Get category from news title
     const getCategoryFromTitle = (title) => {
         if (!title) return 'Agriculture';
-        
+
         const titleLower = title.toLowerCase();
         if (titleLower.includes('ai') || titleLower.includes('technology') || titleLower.includes('digital')) {
             return 'Technology';
@@ -123,13 +126,80 @@ const Home = (props) => {
         }
     ];
 
+    const getLocation = () => {
+        if ("geolocation" in navigator) {
+            setLocationLoading(true);
+            setLocationError(null);
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const newLocation = {
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude,
+                    };
+                    setLocation(newLocation);
+                    setLocationError(null);
+                    setLocationLoading(false);
+                    console.log('Location retrieved successfully:', newLocation);
+                },
+                (err) => {
+                    console.error('Geolocation error:', err);
+                    setLocationError(err.message);
+                    setLocation(null);
+                    setLocationLoading(false);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 60000
+                }
+            );
+        } else {
+            setLocationError("Geolocation is not supported by this browser.");
+            setLocationLoading(false);
+        }
+    };
+
+    // Function to get location-based weather (placeholder for future implementation)
+    const getWeatherInfo = async () => {
+        if (!location) return null;
+        
+        try {
+            // This is a placeholder - you can integrate with a weather API later
+            // For now, we'll just return basic location info
+            return {
+                coordinates: `${location.lat.toFixed(4)}, ${location.lon.toFixed(4)}`,
+                accuracy: 'High accuracy GPS',
+                timestamp: new Date().toLocaleTimeString()
+            };
+        } catch (error) {
+            console.error('Error getting weather info:', error);
+            return null;
+        }
+    };
+
     useEffect(() => {
         fetchNews();
+        getLocation();
     }, []);
+
+    // Log location when it changes
+    useEffect(() => {
+        if (location) {
+            console.log('Current location:', location);
+        }
+    }, [location]);
+
+    // Log location errors when they occur
+    useEffect(() => {
+        if (locationError) {
+            console.log('Location error:', locationError);
+        }
+    }, [locationError]);
 
     useEffect(() => {
         if (newsData.length === 0) return;
-        
+
         // Auto-slide every 5 seconds
         const interval = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % newsData.length);
@@ -175,7 +245,7 @@ const Home = (props) => {
             <div className="w-full max-h-screen bg-darkGreen flex flex-col gap-8 transition-all duration-300 ease-in-out rounded-md shadow-md shadow-darkBrown p-5 overflow-y-scroll">
 
                 {/* Trending News Slider */}
-                <section className="relative h-80 sm:h-96 md:h-[450px] overflow-hidden rounded-xl">
+                <section className="relative h-80 sm:h-96 md:h-[450px] lg:h-[500px] overflow-hidden rounded-xl shadow-md shadow-black">
                     {newsData.length > 0 && (
                         <motion.div
                             key={currentSlide}
@@ -186,7 +256,7 @@ const Home = (props) => {
                         >
                             {/* Background Image */}
                             <div className="absolute inset-0">
-                                <img 
+                                <img
                                     src={newsData[currentSlide].image}
                                     alt={newsData[currentSlide].title}
                                     className="w-full h-full object-cover"
@@ -214,7 +284,7 @@ const Home = (props) => {
                                         >
                                             {newsData[currentSlide].category}
                                         </motion.div>
-                                        
+
                                         <motion.h2
                                             initial={{ opacity: 0, y: 30 }}
                                             animate={{ opacity: 1, y: 0 }}
@@ -223,7 +293,7 @@ const Home = (props) => {
                                         >
                                             {newsData[currentSlide].title}
                                         </motion.h2>
-                                        
+
                                         <motion.p
                                             initial={{ opacity: 0, y: 30 }}
                                             animate={{ opacity: 1, y: 0 }}
@@ -232,7 +302,7 @@ const Home = (props) => {
                                         >
                                             {newsData[currentSlide].description}
                                         </motion.p>
-                                        
+
                                         <motion.button
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={{ opacity: 1, scale: 1 }}
@@ -257,7 +327,7 @@ const Home = (props) => {
                             >
                                 <FaChevronLeft className="text-lg sm:text-xl" />
                             </motion.button>
-                            
+
                             <motion.button
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
@@ -275,11 +345,10 @@ const Home = (props) => {
                                         whileHover={{ scale: 1.2 }}
                                         whileTap={{ scale: 0.8 }}
                                         onClick={() => setCurrentSlide(index)}
-                                        className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                                            index === currentSlide 
-                                                ? 'bg-accentGreen scale-125' 
+                                        className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${index === currentSlide
+                                                ? 'bg-accentGreen scale-125'
                                                 : 'bg-cream/50 hover:bg-cream/80'
-                                        }`}
+                                            }`}
                                     />
                                 ))}
                             </div>
@@ -293,7 +362,7 @@ const Home = (props) => {
                                 <div className="text-6xl mb-4">📰</div>
                                 <h3 className="text-xl font-semibold mb-2">News Unavailable</h3>
                                 <p className="text-cream/80 mb-4">Unable to load latest news at the moment</p>
-                                <button 
+                                <button
                                     onClick={fetchNews}
                                     className="bg-accentGreen text-white px-4 py-2 rounded-lg hover:bg-lightGreen transition-colors"
                                 >
