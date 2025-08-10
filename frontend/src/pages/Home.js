@@ -184,11 +184,11 @@ const Home = (props) => {
     }, []);
 
     // Log location when it changes
-    useEffect(() => {
-        if (location) {
-            console.log('Current location:', location);
-        }
-    }, [location]);
+    // useEffect(() => {
+    //     if (location) {
+    //         console.log('Current location:', location);
+    //     }
+    // }, [location]);
 
     // Log location errors when they occur
     useEffect(() => {
