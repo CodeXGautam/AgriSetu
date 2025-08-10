@@ -8,6 +8,7 @@ import Home from './pages/Home';
 
 // Lazy load components
 const AgriNews = lazy(() => import('./pages/AgriNews'));
+const AIChatbot = lazy(() => import('./pages/AIChatbot'));
 
 // Loading component with the same animation style
 const LoadingAnimation = () => (
@@ -122,6 +123,21 @@ const App = () => {
               >
                 <Suspense fallback={<LoadingAnimation />}>
                   <AgriNews />
+                </Suspense>
+              </motion.div>
+            } />
+          )}
+          {loggedIn && (
+            <Route path='/ai-chatbot' element={
+              <motion.div
+                key="ai-chatbot"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Suspense fallback={<LoadingAnimation />}>
+                  <AIChatbot loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
                 </Suspense>
               </motion.div>
             } />
