@@ -3,18 +3,13 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { RiMenuUnfold2Line } from "react-icons/ri";
 import { RiMenuUnfoldLine } from "react-icons/ri";
 import { NavLink, useNavigate } from 'react-router';
-import { DiCode } from "react-icons/di";
-import { SlCalender } from "react-icons/sl";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { BsFillPersonFill } from "react-icons/bs";
-import { motion } from 'framer-motion';
 import { 
     FaRobot, 
     FaLeaf, 
     FaNewspaper, 
     FaStore, 
-    FaCloudSun, 
     FaCamera, 
     FaChartLine,
     FaSignOutAlt,
@@ -103,13 +98,13 @@ const Sidebar = (props) => {
     }
 
     const menuItems = [
-        { to: '/home', icon: <IoHome />, label: 'Dashboard', color: 'text-blue-400' },
+        { to: '/home', icon: <IoHome />, label: 'Home', color: 'text-blue-400' },
         { to: '/chatbot', icon: <FaRobot />, label: 'AI Chatbot', color: 'text-green-400' },
-        { to: '/crops-prediction', icon: <FaLeaf />, label: 'Crop Recommendations', color: 'text-emerald-400' },
-        { to: '/news', icon: <FaNewspaper />, label: 'Agriculture News', color: 'text-orange-400' },
-        { to: '/marketplace', icon: <FaStore />, label: 'Marketplace', color: 'text-purple-400' },
         { to: '/disease-detection', icon: <FaCamera />, label: 'Disease Detection', color: 'text-red-400' },
+        { to: '/crops-prediction', icon: <FaLeaf />, label: 'Crop Recommendations', color: 'text-emerald-400' },
         { to: '/analytics', icon: <FaChartLine />, label: 'Analytics', color: 'text-yellow-400' },
+        { to: '/marketplace', icon: <FaStore />, label: 'Marketplace', color: 'text-purple-400' },
+        { to: '/agri-news', icon: <FaNewspaper />, label: 'Agriculture News', color: 'text-orange-400' },
         { to: '/settings', icon: <IoSettingsOutline />, label: 'Settings', color: 'text-gray-400' },
     ];
 
@@ -191,7 +186,7 @@ const Sidebar = (props) => {
             </div>
 
             {/* Desktop view Sidebar */}
-            <div className="w-[25%] min-w-[220px] h-screen bg-gradient-to-b from-darkGreen to-darkGreen/95 p-4 rounded-md flex flex-col justify-between items-center shadow-xl shadow-darkBrown hidden md:flex lg:flex xl:flex 2xl:flex transition-all duration-300 ease-in-out border-r border-accentGreen/20">
+            <div className="w-[25%] min-w-[220px] h-screen bg-gradient-to-b from-darkGreen to-darkGreen/95 p-4 rounded-md flex-col justify-between items-center shadow-xl shadow-darkBrown hidden md:flex lg:flex xl:flex 2xl:flex transition-all duration-300 ease-in-out border-r border-accentGreen/20">
                 <div className="flex-1 w-full overflow-hidden">
                     <SidebarContent />
                 </div>
