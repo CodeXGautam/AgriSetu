@@ -17,6 +17,9 @@ const Home = (props) => {
     const [location, setLocation] = useState(null);
     const [locationError, setLocationError] = useState(null);
     const [locationLoading, setLocationLoading] = useState(false);
+    const [weatherData, setWeatherData] = useState(null);
+    const [weatherLoading, setWeatherLoading] = useState(false);
+    const [weatherError, setWeatherError] = useState(null);
 
     // Fetch news from the API
     const fetchNews = async () => {
@@ -47,9 +50,11 @@ const Home = (props) => {
                     link: news.link,
                     date: news.date
                 }));
+                console.log('News data fetched successfully:', slideshowNews);
                 setNewsData(slideshowNews);
             } else {
                 // Fallback to default news if API fails
+                console.log('API returned no data, using default news');
                 setNewsData(getDefaultNews());
             }
         } catch (error) {
@@ -178,7 +183,212 @@ const Home = (props) => {
         }
     };
 
+    // Get weather icon based on condition code and day/night
+    const getWeatherIcon = (conditionCode, isDay) => {
+        // Weather condition codes from WeatherAPI.com
+        const weatherIcons = {
+            1000: isDay ? '☀️' : '🌙', // Clear
+            1003: isDay ? '🌤️' : '☁️', // Partly cloudy
+            1006: '☁️', // Cloudy
+            1009: '☁️', // Overcast
+            1030: '🌫️', // Mist
+            1063: '🌦️', // Patchy rain
+            1066: '🌨️', // Patchy snow
+            1069: '🌨️', // Patchy sleet
+            1087: '⛈️', // Thundery outbreaks
+            1114: '🌨️', // Blowing snow
+            1117: '❄️', // Blizzard
+            1135: '🌫️', // Fog
+            1147: '🌫️', // Freezing fog
+            1150: '🌦️', // Patchy light drizzle
+            1153: '🌦️', // Light drizzle
+            1168: '🌧️', // Heavy drizzle
+            1171: '🌧️', // Heavy drizzle
+            1180: '🌦️', // Patchy light rain
+            1183: '🌦️', // Light rain
+            1186: '🌧️', // Moderate rain
+            1189: '🌧️', // Moderate rain
+            1192: '🌧️', // Heavy rain
+            1195: '🌧️', // Heavy rain
+            1198: '🌦️', // Light freezing rain
+            1201: '🌧️', // Moderate or heavy freezing rain
+            1204: '🌨️', // Light sleet
+            1207: '🌨️', // Moderate or heavy sleet
+            1210: '🌨️', // Patchy light snow
+            1213: '🌨️', // Light snow
+            1216: '🌨️', // Patchy moderate snow
+            1219: '🌨️', // Moderate snow
+            1222: '❄️', // Patchy heavy snow
+            1225: '❄️', // Heavy snow
+            1237: '🧊', // Ice pellets
+            1240: '🌦️', // Light rain shower
+            1243: '🌧️', // Moderate or heavy rain shower
+            1246: '🌧️', // Torrential rain shower
+            1249: '🌨️', // Light sleet showers
+            1252: '🌨️', // Moderate or heavy sleet showers
+            1255: '🌨️', // Light snow showers
+            1258: '🌨️', // Moderate or heavy snow showers
+            1261: '🧊', // Light ice pellet showers
+            1264: '🧊', // Moderate or heavy ice pellet showers
+            1273: '⛈️', // Patchy light rain with thunder
+            1276: '⛈️', // Moderate or heavy rain with thunder
+            1279: '⛈️', // Patchy light snow with thunder
+            1282: '⛈️', // Moderate or heavy snow with thunder
+        };
+        
+        return weatherIcons[conditionCode] || '🌤️';
+    };
+
+    // Get weather severity and recommendations
+    const getWeatherSeverity = (weatherData) => {
+        if (!weatherData) return null;
+        
+        const current = weatherData.current;
+        const forecast = weatherData.forecast?.forecastday?.[0]?.day;
+        
+        const alerts = [];
+        let severity = 'good';
+        
+        // Temperature checks
+        if (current?.temp_c > 35) {
+            alerts.push({
+                type: 'temperature',
+                severity: 'high',
+                message: 'High temperature alert! Stay hydrated and avoid outdoor activities during peak hours.',
+                icon: '🔥'
+            });
+            severity = 'warning';
+        } else if (current?.temp_c < 5) {
+            alerts.push({
+                type: 'temperature',
+                severity: 'high',
+                message: 'Low temperature alert! Protect crops from frost damage.',
+                icon: '❄️'
+            });
+            severity = 'warning';
+        }
+        
+        // Rain checks
+        if (forecast?.daily_chance_of_rain > 70) {
+            alerts.push({
+                type: 'rain',
+                severity: forecast?.daily_chance_of_rain > 90 ? 'high' : 'medium',
+                message: `High chance of rain (${forecast.daily_chance_of_rain}%). Plan irrigation accordingly.`,
+                icon: '🌧️'
+            });
+            if (forecast?.daily_chance_of_rain > 90) severity = 'warning';
+        }
+        
+        // Wind checks
+        if (current?.wind_kph > 30) {
+            alerts.push({
+                type: 'wind',
+                severity: current?.wind_kph > 50 ? 'high' : 'medium',
+                message: `Strong winds (${current.wind_kph} km/h). Secure loose items and protect crops.`,
+                icon: '💨'
+            });
+            if (current?.wind_kph > 50) severity = 'warning';
+        }
+        
+        // UV Index checks
+        if (current?.uv > 8) {
+            alerts.push({
+                type: 'uv',
+                severity: 'high',
+                message: 'Very high UV index! Protect yourself and crops from sun damage.',
+                icon: '☀️'
+            });
+            severity = 'warning';
+        }
+        
+        // Visibility checks
+        if (current?.vis_km < 5) {
+            alerts.push({
+                type: 'visibility',
+                severity: 'medium',
+                message: 'Low visibility conditions. Exercise caution with outdoor activities.',
+                icon: '🌫️'
+            });
+        }
+        
+        return {
+            severity,
+            alerts,
+            recommendations: getWeatherRecommendations(severity, alerts)
+        };
+    };
+
+    // Get weather recommendations based on severity
+    const getWeatherRecommendations = (severity, alerts) => {
+        const recommendations = [];
+        
+        if (severity === 'good') {
+            recommendations.push('🌱 Perfect weather for farming activities');
+            recommendations.push('💧 Normal irrigation schedule recommended');
+            recommendations.push('🌾 Good conditions for crop growth');
+        } else if (severity === 'warning') {
+            recommendations.push('⚠️ Monitor weather conditions closely');
+            recommendations.push('🛡️ Take protective measures for crops');
+            recommendations.push('📱 Stay updated with weather alerts');
+        }
+        
+        alerts.forEach(alert => {
+            if (alert.type === 'temperature' && alert.severity === 'high') {
+                recommendations.push('🌡️ Adjust irrigation timing to early morning/evening');
+            }
+            if (alert.type === 'rain' && alert.severity === 'high') {
+                recommendations.push('☔ Reduce irrigation and prepare drainage');
+            }
+            if (alert.type === 'wind' && alert.severity === 'high') {
+                recommendations.push('🏗️ Secure farm structures and equipment');
+            }
+        });
+        
+        return recommendations;
+    };
+
+    // Fetch weather data from backend
+    const fetchWeather = async () => {
+        if (!location) return;
+        
+        try {
+            setWeatherLoading(true);
+            setWeatherError(null);
+            
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/weather`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    lat: location.lat,
+                    lon: location.lon
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const output = await response.json();
+            
+            if (output.success && output.data) {
+                setWeatherData(output.data);
+                console.log('Weather data fetched successfully:', output.data);
+            } else {
+                throw new Error(output.message || 'Failed to fetch weather data');
+            }
+        } catch (error) {
+            console.error('Error fetching weather:', error);
+            setWeatherError(error.message);
+        } finally {
+            setWeatherLoading(false);
+        }
+    };
+
     useEffect(() => {
+        console.log('Home component mounted, fetching news and location...');
         fetchNews();
         getLocation();
     }, []);
@@ -196,6 +406,14 @@ const Home = (props) => {
             console.log('Location error:', locationError);
         }
     }, [locationError]);
+
+    // Fetch weather when location is available
+    useEffect(() => {
+        if (location) {
+            console.log('Current location:', location);
+            fetchWeather();
+        }
+    }, [location]);
 
     useEffect(() => {
         if (newsData.length === 0) return;
@@ -223,9 +441,9 @@ const Home = (props) => {
 
     if (loading) {
         return (
-            <div className="flex w-full min-h-screen relative gap-4 overflow-hidden bg-gradient-to-r from-deepGreen to-gradientLight text-cream">
+            <div className="flex w-full h-screen bg-gradient-to-r from-deepGreen to-gradientLight text-cream">
                 <Sidebar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-                <div className="w-full max-h-screen bg-darkGreen flex flex-col gap-8 transition-all duration-300 ease-in-out rounded-md shadow-md shadow-darkBrown p-5 overflow-y-scroll">
+                <div className="w-full h-full bg-darkGreen flex flex-col gap-6 transition-all duration-300 ease-in-out rounded-md shadow-md shadow-darkBrown p-4 overflow-y-auto">
                     <div className="flex justify-center items-center h-80 sm:h-96 md:h-[450px]">
                         <div className="text-center">
                             <div className="animate-spin rounded-full h-16 w-16 border-4 border-accentGreen border-t-cream mx-auto mb-4"></div>
@@ -238,15 +456,18 @@ const Home = (props) => {
         );
     }
 
+    console.log('Rendering Home component, newsData length:', newsData.length, 'loading:', loading);
+    
     return (
-        <div className="flex w-full min-h-screen relative gap-4 overflow-hidden bg-gradient-to-r from-deepGreen to-gradientLight text-cream">
+        <div className="flex w-full h-screen bg-gradient-to-r from-deepGreen to-gradientLight text-cream">
             <Sidebar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
 
-            <div className="w-full max-h-screen bg-darkGreen flex flex-col gap-8 transition-all duration-300 ease-in-out rounded-md shadow-md shadow-darkBrown p-5 overflow-y-scroll">
+            <div className="w-full h-full bg-darkGreen flex flex-col gap-6 transition-all duration-300 ease-in-out rounded-md shadow-md shadow-darkBrown p-4 overflow-y-auto">
 
                 {/* Trending News Slider */}
-                <section className="relative h-80 sm:h-96 md:h-[450px] lg:h-[500px] overflow-hidden rounded-xl shadow-md shadow-black">
-                    {newsData.length > 0 && (
+                <section className="relative min-h-[400px] h-[500px] overflow-hidden rounded-xl shadow-md shadow-black bg-gradient-to-r from-deepGreen/80 to-darkGreen/80">
+                    {console.log('Rendering slideshow, currentSlide:', currentSlide, 'newsData:', newsData[currentSlide])}
+                    {newsData.length > 0 ? (
                         <motion.div
                             key={currentSlide}
                             initial={{ opacity: 0 }}
@@ -274,7 +495,7 @@ const Home = (props) => {
                                         initial={{ opacity: 0, x: -50 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ duration: 0.8, delay: 0.2 }}
-                                        className="max-w-2xl"
+                                        className="max-w-2xl lg:max-w-3xl"
                                     >
                                         <motion.div
                                             initial={{ opacity: 0, y: 20 }}
@@ -289,7 +510,7 @@ const Home = (props) => {
                                             initial={{ opacity: 0, y: 30 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ duration: 0.8, delay: 0.6 }}
-                                            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-cream mb-4 leading-tight"
+                                            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-cream mb-3 sm:mb-4 leading-tight"
                                         >
                                             {newsData[currentSlide].title}
                                         </motion.h2>
@@ -298,7 +519,7 @@ const Home = (props) => {
                                             initial={{ opacity: 0, y: 30 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ duration: 0.8, delay: 0.8 }}
-                                            className="text-sm sm:text-base md:text-lg lg:text-xl text-cream mb-6 leading-relaxed"
+                                            className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-cream mb-4 sm:mb-6 leading-relaxed line-clamp-3 lg:line-clamp-4"
                                         >
                                             {newsData[currentSlide].description}
                                         </motion.p>
@@ -353,25 +574,195 @@ const Home = (props) => {
                                 ))}
                             </div>
                         </motion.div>
-                    )}
-
-                    {/* Error State */}
-                    {error && newsData.length === 0 && (
+                    ) : (
                         <div className="flex items-center justify-center h-full">
                             <div className="text-center text-cream">
                                 <div className="text-6xl mb-4">📰</div>
-                                <h3 className="text-xl font-semibold mb-2">News Unavailable</h3>
-                                <p className="text-cream/80 mb-4">Unable to load latest news at the moment</p>
-                                <button
-                                    onClick={fetchNews}
-                                    className="bg-accentGreen text-white px-4 py-2 rounded-lg hover:bg-lightGreen transition-colors"
-                                >
-                                    Try Again
-                                </button>
+                                <h3 className="text-xl font-semibold mb-2">Loading News...</h3>
+                                <p className="text-cream/80 mb-4">Please wait while we fetch the latest updates</p>
+                                <div className="animate-spin rounded-full h-8 w-8 border-4 border-accentGreen border-t-cream mx-auto"></div>
                             </div>
                         </div>
                     )}
                 </section>
+
+                {/* Weather Dashboard */}
+                {location && (
+                    <section className="bg-gradient-to-br from-darkGreen/90 to-deepGreen/80 rounded-xl p-6 border border-accentGreen/30 shadow-xl">
+                        <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center space-x-3">
+                                <div className="text-3xl">🌤️</div>
+                                <div>
+                                    <h3 className="text-cream font-bold text-xl">Weather Dashboard</h3>
+                                    <p className="text-cream/80 text-sm">
+                                        {weatherData?.location?.name || 'Your Location'} • {weatherData?.location?.country || 'Loading...'}
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={fetchWeather}
+                                disabled={weatherLoading}
+                                className="bg-accentGreen text-white px-4 py-2 rounded-lg text-sm hover:bg-lightGreen transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                            >
+                                {weatherLoading ? (
+                                    <>
+                                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                                        <span>Updating...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>🔄</span>
+                                        <span>Refresh</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+
+                        {weatherLoading && (
+                            <div className="flex justify-center items-center h-32">
+                                <div className="animate-spin rounded-full h-12 w-12 border-4 border-accentGreen border-t-transparent"></div>
+                            </div>
+                        )}
+
+                        {weatherError && (
+                            <div className="bg-red-900/50 border border-red-400/30 rounded-lg p-4 text-center">
+                                <div className="text-red-400 text-xl mb-2">⚠️</div>
+                                <p className="text-red-200 text-sm">{weatherError}</p>
+                                <button
+                                    onClick={fetchWeather}
+                                    className="mt-3 bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors"
+                                >
+                                    Try Again
+                                </button>
+                            </div>
+                        )}
+
+                        {weatherData && !weatherLoading && (
+                            <div className="space-y-6">
+                                {/* Current Weather */}
+                                <div className="bg-darkGreen/50 backdrop-blur-sm rounded-xl p-6 border border-accentGreen/20">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <h4 className="text-cream font-semibold text-lg mb-2">Current Weather</h4>
+                                            <div className="flex items-center space-x-4">
+                                                <div className="text-4xl font-bold text-cream">
+                                                    {weatherData.current?.temp_c}°C
+                                                </div>
+                                                <div>
+                                                    <p className="text-cream/80 text-sm">
+                                                        Feels like {weatherData.current?.feelslike_c}°C
+                                                    </p>
+                                                    <p className="text-cream/80 text-sm">
+                                                        {weatherData.current?.condition?.text}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-6xl mb-2">
+                                                {getWeatherIcon(weatherData.current?.condition?.code, weatherData.current?.is_day)}
+                                            </div>
+                                            <p className="text-cream/80 text-sm">
+                                                Humidity: {weatherData.current?.humidity}%
+                                            </p>
+                                            <p className="text-cream/80 text-sm">
+                                                Wind: {weatherData.current?.wind_kph} km/h
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 3-Day Forecast */}
+                                <div className="bg-darkGreen/50 backdrop-blur-sm rounded-xl p-6 border border-accentGreen/20">
+                                    <h4 className="text-cream font-semibold text-lg mb-4">3-Day Forecast</h4>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                        {weatherData.forecast?.forecastday?.slice(0, 3).map((day, index) => (
+                                            <div key={index} className="bg-darkGreen/30 rounded-lg p-4 text-center border border-accentGreen/10">
+                                                <p className="text-cream/80 text-sm font-medium mb-2">
+                                                    {new Date(day.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                                                </p>
+                                                <div className="text-3xl mb-2">
+                                                    {getWeatherIcon(day.day.condition.code, 1)}
+                                                </div>
+                                                <p className="text-cream font-semibold text-lg mb-1">
+                                                    {day.day.maxtemp_c}°C
+                                                </p>
+                                                <p className="text-cream/80 text-sm">
+                                                    {day.day.mintemp_c}°C
+                                                </p>
+                                                <p className="text-cream/60 text-xs mt-1">
+                                                    {day.day.condition.text}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Weather Alerts */}
+                                {weatherData.alerts?.alert && weatherData.alerts.alert.length > 0 && (
+                                    <div className="bg-red-900/50 border border-red-400/30 rounded-xl p-6">
+                                        <div className="flex items-center space-x-3 mb-4">
+                                            <div className="text-2xl">🚨</div>
+                                            <h4 className="text-red-200 font-bold text-lg">Weather Alerts</h4>
+                                        </div>
+                                        <div className="space-y-3">
+                                            {weatherData.alerts.alert.map((alert, index) => (
+                                                <div key={index} className="bg-red-800/30 rounded-lg p-4 border border-red-400/20">
+                                                    <div className="flex items-start justify-between">
+                                                        <div className="flex-1">
+                                                            <h5 className="text-red-200 font-semibold mb-2">{alert.headline}</h5>
+                                                            <p className="text-red-300 text-sm mb-2">{alert.msg}</p>
+                                                            <div className="flex items-center space-x-4 text-xs text-red-300">
+                                                                <span>From: {new Date(alert.effective).toLocaleString()}</span>
+                                                                <span>To: {new Date(alert.expires).toLocaleString()}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-red-400 text-2xl">⚠️</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Weather Summary */}
+                                <div className="bg-darkGreen/50 backdrop-blur-sm rounded-xl p-6 border border-accentGreen/20">
+                                    <h4 className="text-cream font-semibold text-lg mb-4">Weather Summary</h4>
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                                        <div className="text-center">
+                                            <div className="text-2xl mb-1">🌡️</div>
+                                            <p className="text-cream/60 text-xs">Max Temp</p>
+                                            <p className="text-cream font-semibold">
+                                                {weatherData.forecast?.forecastday?.[0]?.day?.maxtemp_c}°C
+                                            </p>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="text-2xl mb-1">💧</div>
+                                            <p className="text-cream/60 text-xs">Rain Chance</p>
+                                            <p className="text-cream font-semibold">
+                                                {weatherData.forecast?.forecastday?.[0]?.day?.daily_chance_of_rain}%
+                                            </p>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="text-2xl mb-1">☀️</div>
+                                            <p className="text-cream/60 text-xs">UV Index</p>
+                                            <p className="text-cream font-semibold">
+                                                {weatherData.current?.uv}
+                                            </p>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="text-2xl mb-1">👁️</div>
+                                            <p className="text-cream/60 text-xs">Visibility</p>
+                                            <p className="text-cream font-semibold">
+                                                {weatherData.current?.vis_km} km
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </section>
+                )}
 
                 <Footer />
             </div>
