@@ -271,42 +271,6 @@ const googleAuthCode = async (req, res) => {
     }
 };
 
-const getInterviewInfo = async (req, res) =>{
-    try {
-        const info = await User.aggregate([
-            {
-                $match: {
-                    _id: new mongoose.Types.ObjectId(req.user._id)
-                }
-            },
-            {
-                $lookup: {
-                    from: "interviews",
-                    localField: "_id",
-                    foreignField: "candidate",
-                    as: "interviews"
-                }
-            },
-            {
-                $project: {
-                    interviews:1,
-                    _id: 0
-                }
-            }           
-        ]);
-
-        res.status(200)
-        .json({interviews: info[0]?.interviews || []})
-        
-    } catch (error) {
-        console.log("Error",error);
-        res.status(500)
-        .json({
-            message:"Failed to fetch interview info"
-        })
-    }
-}
-
 cloudinary.v2.config({
     cloud_name: process.env.CLOUDINARY_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -367,7 +331,6 @@ export {
     logoutUser,
     refreshAccessToken,
     googleAuthCode,
-    getInterviewInfo,
     uploadResume,
     uploadAvatar
 };
