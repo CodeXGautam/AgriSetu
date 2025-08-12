@@ -277,27 +277,6 @@ cloudinary.v2.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Resume upload controller
-const uploadResume = async (req, res, next) => {
-    try {
-        if (!req.file) {
-            return res.status(400).json({ message: "No file uploaded" });
-        }
-        const result = await cloudinary.v2.uploader.upload(req.file.path, {
-            resource_type: "auto",
-            folder: "resumes",
-            secure: true,
-            max_size: 2* 1024 * 1024, // 2MB
-        });
-        fs.unlinkSync(req.file.path);
-        req.resumeUrl = result.secure_url;
-        next();
-    } catch (error) {
-        console.error("Resume upload error:", error);
-        res.status(500).json({ message: "Failed to upload resume" });
-    }
-};
-
 const uploadAvatar = async (req, res) => {
     try {
         if (!req.file) {
@@ -331,6 +310,5 @@ export {
     logoutUser,
     refreshAccessToken,
     googleAuthCode,
-    uploadResume,
     uploadAvatar
 };
