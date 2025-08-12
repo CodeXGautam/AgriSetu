@@ -4,9 +4,22 @@ import cookieParser from 'cookie-parser';
 import { registerUser, loginUser, refreshAccessToken, logoutUser,getCurrentUser, googleAuthCode } from './controllers/userController.js';
 import { getAgricultureNews } from './controllers/newsController.js';
 import { getWeatherInfo } from './controllers/weatherController.js';
+import { analyzePlantDisease, agriculturalChatbot } from './controllers/chatmodelController.js';
+import { uploadImage, deleteImage } from './controllers/imageController.js';
+import { translateText, getSupportedLanguages } from './controllers/translationController.js';
+import { 
+  createConversation, 
+  getUserConversations, 
+  getConversation, 
+  addMessage, 
+  updateConversationTitle, 
+  deleteConversation, 
+  clearAllConversations 
+} from './controllers/chatController.js';
+import { acknowledgeSpeechRecognition, getSpeechLanguages } from './controllers/whisperController.js';
 import { verifyJwt } from './middleware/auth.middleware.js';
-import { uploadResume, uploadAvatar } from './controllers/userController.js';
-import { upload } from './middleware/multer.js';
+import {  uploadAvatar } from './controllers/userController.js';
+import { upload, uploadMemory } from './middleware/multer.js';
 
 const app = express();
 
@@ -39,6 +52,35 @@ app.get('/api/v1/news/agriculture', getAgricultureNews);
 
 // Weather routes
 app.post('/api/v1/weather', getWeatherInfo);
+
+// Disease detection routes
+app.post('/api/v1/disease-detection', analyzePlantDisease);
+
+// Agricultural chatbot routes
+app.post('/api/v1/agricultural-chatbot', agriculturalChatbot);
+
+// Image upload routes
+app.post('/api/v1/upload-image', uploadMemory.single('image'), uploadImage);
+app.delete('/api/v1/delete-image/:public_id', deleteImage);
+
+// Translation routes
+app.post('/api/v1/translate', translateText);
+app.get('/api/v1/languages', getSupportedLanguages);
+
+// Chat routes
+app.post('/api/v1/conversations', verifyJwt, createConversation);
+app.get('/api/v1/conversations', verifyJwt, getUserConversations);
+app.get('/api/v1/conversations/:conversationId', verifyJwt, getConversation);
+app.post('/api/v1/conversations/:conversationId/messages', verifyJwt, addMessage);
+app.put('/api/v1/conversations/:conversationId/title', verifyJwt, updateConversationTitle);
+app.delete('/api/v1/conversations/:conversationId', verifyJwt, deleteConversation);
+app.delete('/api/v1/conversations', verifyJwt, clearAllConversations);
+
+// Web Speech API routes
+app.post('/api/v1/speech/recognize', acknowledgeSpeechRecognition);
+app.get('/api/v1/speech/languages', getSpeechLanguages);
+
+
 
 
 export default app;
