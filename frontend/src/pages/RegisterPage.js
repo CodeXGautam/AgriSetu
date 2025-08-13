@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router';
 import { FcGoogle } from "react-icons/fc";
 import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion,} from 'framer-motion';
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
 import LoadingAnimation from "../Components/LoadingAnimation";
