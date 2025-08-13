@@ -9,6 +9,7 @@ import Home from './pages/Home';
 // Lazy load components
 const AgriNews = lazy(() => import('./pages/AgriNews'));
 const AIChatbot = lazy(() => import('./pages/AIChatbot'));
+const DiseaseDetection = lazy(() => import('./pages/DiseaseDetection'));
 
 // Loading component with the same animation style
 const LoadingAnimation = () => (
@@ -138,6 +139,21 @@ const App = () => {
               >
                 <Suspense fallback={<LoadingAnimation />}>
                   <AIChatbot loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                </Suspense>
+              </motion.div>
+            } />
+          )}
+          {loggedIn && (
+            <Route path='/disease-detection' element={
+              <motion.div
+                key="disease-detection"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Suspense fallback={<LoadingAnimation />}>
+                  <DiseaseDetection />
                 </Suspense>
               </motion.div>
             } />
