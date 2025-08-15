@@ -1,4 +1,3 @@
-import { BiSolidDashboard } from "react-icons/bi";
 import { useNavigate } from 'react-router';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -25,7 +24,8 @@ const Home = (props) => {
     const fetchNews = async () => {
         try {
             setLoading(true);
-            const url = `${process.env.REACT_APP_BACKEND_URI}/news/agriculture?language=en&page=1`;
+            // const url = `${process.env.REACT_APP_BACKEND_URI}/news/agriculture?language=en&page=1`;
+            const url = ``;
             const response = await fetch(url, {
                 credentials: 'include',
                 headers: {
