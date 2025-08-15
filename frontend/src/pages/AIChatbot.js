@@ -8,18 +8,18 @@ const AIChatbot = (props) => {
     const loggedIn = props.loggedIn;
     const setLoggedIn = props.setLoggedIn;
     const navigate = useNavigate();
-    
+
     // Chat history state
     const [conversations, setConversations] = useState([]);
     const [conversationsLoading, setConversationsLoading] = useState(false);
-    
+
     const [selectedLanguage, setSelectedLanguage] = useState('en-US');
     const [currentConversation, setCurrentConversation] = useState(null);
     const [messages, setMessages] = useState([
         {
             id: 1,
             type: 'bot',
-            content: selectedLanguage.startsWith('en') 
+            content: selectedLanguage.startsWith('en')
                 ? "Namaste! I'm Kisaan Guru, your agricultural expert. How can I help you with farming today? Ask me anything about crops, soil, weather, or farming techniques! 🌱"
                 : `नमस्ते! मैं किसान गुरु हूं, आपका कृषि विशेषज्ञ। आज मैं आपकी खेती में कैसे मदद कर सकता हूं? मुझसे फसलों, मिट्टी, मौसम या खेती की तकनीकों के बारे में कुछ भी पूछें! 🌱`,
             timestamp: new Date()
@@ -33,14 +33,14 @@ const AIChatbot = (props) => {
     const [isRecording, setIsRecording] = useState(false);
     const [isTranscribing, setIsTranscribing] = useState(false);
     const [speechRecognition, setSpeechRecognition] = useState(null);
-    
+
     // Text-to-Speech state
     const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
     const [speechSynthesis, setSpeechSynthesis] = useState(null);
     const [currentUtterance, setCurrentUtterance] = useState(null);
     const [availableVoices, setAvailableVoices] = useState([]);
     const [selectedVoice, setSelectedVoice] = useState(null);
-    
+
     // Location state
     const [userLocation, setUserLocation] = useState(null);
     const [locationPermission, setLocationPermission] = useState('prompt');
@@ -53,62 +53,73 @@ const AIChatbot = (props) => {
 
     // Initialize speech synthesis
     useEffect(() => {
+        console.log('Initializing speech synthesis...');
         if ('speechSynthesis' in window) {
             const synthesis = window.speechSynthesis;
             setSpeechSynthesis(synthesis);
-            
+
             // Load available voices
             const loadVoices = () => {
                 const voices = synthesis.getVoices();
+                console.log('Available voices loaded:', voices.length);
                 setAvailableVoices(voices);
-                
+
                 // Auto-select voice based on language
-                const preferredVoice = voices.find(voice => 
-                    voice.lang === selectedLanguage || 
-                    voice.lang.startsWith(selectedLanguage.split('-')[0])
-                ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
-                
-                setSelectedVoice(preferredVoice);
+                // Force Indian accent for all responses
+const indianVoices = voices.filter(voice => voice.lang.endsWith('-IN'));
+const newVoice = indianVoices.find(voice => voice.lang === selectedLanguage) ||
+                 indianVoices.find(voice => voice.lang.startsWith(selectedLanguage.split('-')[0])) ||
+                 indianVoices.find(voice => voice.lang === 'en-IN') ||
+                 indianVoices[0];
+if (!newVoice) {
+    console.warn('No Indian voices available');
+    toast.error('Indian accent not available - using default voice');
+}
+
+                setSelectedVoice(newVoice);
+                console.log('Selected voice:', newVoice ? newVoice.name : 'None');
             };
-            
+
             // Load voices when they become available
             if (synthesis.getVoices().length > 0) {
                 loadVoices();
             } else {
                 synthesis.onvoiceschanged = loadVoices;
             }
+        } else {
+            console.warn('SpeechSynthesis API not supported in this browser.');
         }
     }, [selectedLanguage]);
 
     // Function to speak text
     const speakText = (text) => {
         if (!speechSynthesis || !isVoiceEnabled || !selectedVoice) return;
-        
+
         // Stop any current speech
         if (currentUtterance) {
             speechSynthesis.cancel();
         }
-        
+
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.voice = selectedVoice;
         utterance.rate = 0.9; // Slightly slower for better comprehension
         utterance.pitch = 1.0;
         utterance.volume = 1.0;
-        
+
         utterance.onstart = () => {
             setCurrentUtterance(utterance);
         };
-        
+
         utterance.onend = () => {
             setCurrentUtterance(null);
         };
-        
+
         utterance.onerror = (event) => {
             console.error('Speech synthesis error:', event.error);
             setCurrentUtterance(null);
             toast.error('Speech synthesis failed. Please try again.');
         };
-        
+
         speechSynthesis.speak(utterance);
     };
 
@@ -126,9 +137,9 @@ const AIChatbot = (props) => {
             toast.error('Speech synthesis is not supported in this browser');
             return;
         }
-        
+
         setIsVoiceEnabled(!isVoiceEnabled);
-        
+
         if (isVoiceEnabled) {
             stopSpeech();
             toast.success('Voice responses disabled');
@@ -149,7 +160,7 @@ const AIChatbot = (props) => {
                 const { latitude, longitude } = position.coords;
                 setUserLocation({ latitude, longitude });
                 setLocationPermission('granted');
-                
+
                 // Reverse geocode to get city, state, country
                 fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`)
                     .then(response => response.json())
@@ -164,7 +175,7 @@ const AIChatbot = (props) => {
                     .catch(error => {
                         console.log('Reverse geocoding failed, using coordinates only');
                     });
-                
+
                 toast.success('Location access granted! I can now provide location-specific farming advice.');
             },
             (error) => {
@@ -196,7 +207,7 @@ const AIChatbot = (props) => {
     const loadConversations = async () => {
         try {
             setConversationsLoading(true);
-            
+
             if (!loggedIn) {
                 // For non-authenticated users, load from localStorage
                 const localConversations = localStorage.getItem('kisaanChatConversations');
@@ -227,7 +238,7 @@ const AIChatbot = (props) => {
                     messageCount: conv.messageCount || 0,
                     isLocal: false
                 }));
-                
+
                 setConversations(loadedConversations);
             } else if (response.status === 401) {
                 // User not authenticated, try localStorage
@@ -273,7 +284,7 @@ const AIChatbot = (props) => {
         requestLocation();
         // Load existing conversations from backend
         loadConversations();
-        
+
         // Cleanup function to stop speech when component unmounts
         return () => {
             if (speechSynthesis) {
@@ -362,7 +373,7 @@ const AIChatbot = (props) => {
                 messageCount: 1,
                 isLocal: !loggedIn
             };
-            
+
             if (loggedIn) {
                 // For authenticated users, create in backend
                 const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/conversations`, {
@@ -382,10 +393,10 @@ const AIChatbot = (props) => {
                     const data = await response.json();
                     newConversation.id = data.data._id;
                     newConversation.isLocal = false;
-                    
+
                     // Save welcome message to backend
-                    await saveMessageToBackend(newConversation.id, 'assistant', 
-                        selectedLanguage.startsWith('en') 
+                    await saveMessageToBackend(newConversation.id, 'assistant',
+                        selectedLanguage.startsWith('en')
                             ? "Namaste! I'm Kisaan Guru, your agricultural expert. How can I help you with farming today? Ask me anything about crops, soil, weather, or farming techniques! 🌱"
                             : `नमस्ते! मैं किसान गुरु हूं, आपका कृषि विशेषज्ञ। आज मैं आपकी खेती में कैसे मदद कर सकता हूं? मुझसे फसलों, मिट्टी, मौसम या खेती की तकनीकों के बारे में कुछ भी पूछें! 🌱`
                     );
@@ -397,12 +408,12 @@ const AIChatbot = (props) => {
                 const welcomeMessage = {
                     id: 1,
                     type: 'bot',
-                    content: selectedLanguage.startsWith('en') 
+                    content: selectedLanguage.startsWith('en')
                         ? "Namaste! I'm Kisaan Guru, your agricultural expert. How can I help you with farming today? Ask me anything about crops, soil, weather, or farming techniques! 🌱"
                         : `नमस्ते! मैं किसान गुरु हूं, आपका कृषि विशेषज्ञ। आज मैं आपकी खेती में कैसे मदद कर सकता हूं? मुझसे फसलों, मिट्टी, मौसम या खेती की तकनीकों के बारे में कुछ भी पूछें! 🌱`,
                     timestamp: new Date()
                 };
-                
+
                 // Save conversation to localStorage
                 const localConversations = JSON.parse(localStorage.getItem('kisaanChatConversations') || '[]');
                 const conversationToSave = {
@@ -412,21 +423,21 @@ const AIChatbot = (props) => {
                 localConversations.unshift(conversationToSave);
                 localStorage.setItem('kisaanChatConversations', JSON.stringify(localConversations));
             }
-            
+
             setConversations(prev => [newConversation, ...prev]);
             setCurrentConversation(newConversation);
-            
+
             const welcomeMessage = {
                 id: 1,
                 type: 'bot',
-                content: selectedLanguage.startsWith('en') 
+                content: selectedLanguage.startsWith('en')
                     ? "Namaste! I'm Kisaan Guru, your agricultural expert. How can I help you with farming today? Ask me anything about crops, soil, weather, or farming techniques! 🌱"
                     : `नमस्ते! मैं किसान गुरु हूं, आपका कृषि विशेषज्ञ। आज मैं आपकी खेती में कैसे मदद कर सकता हूं? मुझसे फसलों, मिट्टी, मौसम या खेती की तकनीकों के बारे में कुछ भी पूछें! 🌱`,
                 timestamp: new Date()
             };
-            
+
             setMessages([welcomeMessage]);
-            
+
         } catch (error) {
             console.error('Error creating conversation:', error);
             toast.error('Failed to create new conversation');
@@ -440,7 +451,7 @@ const AIChatbot = (props) => {
                 // Save to localStorage for local conversations
                 const localConversations = JSON.parse(localStorage.getItem('kisaanChatConversations') || '[]');
                 const conversationIndex = localConversations.findIndex(conv => conv.id === conversationId);
-                
+
                 if (conversationIndex !== -1) {
                     const messageToSave = {
                         id: Date.now(),
@@ -448,14 +459,14 @@ const AIChatbot = (props) => {
                         content: content,
                         timestamp: new Date()
                     };
-                    
+
                     if (!localConversations[conversationIndex].messages) {
                         localConversations[conversationIndex].messages = [];
                     }
-                    
+
                     localConversations[conversationIndex].messages.push(messageToSave);
                     localConversations[conversationIndex].messageCount = localConversations[conversationIndex].messages.length;
-                    
+
                     localStorage.setItem('kisaanChatConversations', JSON.stringify(localConversations));
                 }
             } else {
@@ -481,12 +492,12 @@ const AIChatbot = (props) => {
     const selectConversation = async (conversation) => {
         try {
             setCurrentConversation(conversation);
-            
+
             if (conversation.isLocal) {
                 // Load local conversation from localStorage
                 const localConversations = JSON.parse(localStorage.getItem('kisaanChatConversations') || '[]');
                 const localConv = localConversations.find(conv => conv.id === conversation.id);
-                
+
                 if (localConv && localConv.messages) {
                     const loadedMessages = localConv.messages.map((msg, index) => ({
                         id: index + 1,
@@ -501,7 +512,7 @@ const AIChatbot = (props) => {
                         {
                             id: 1,
                             type: 'bot',
-                            content: selectedLanguage.startsWith('en') 
+                            content: selectedLanguage.startsWith('en')
                                 ? `Welcome back to: "${conversation.title}". How can I help you continue our discussion? 🌱`
                                 : `"${conversation.title}" पर वापस आपका स्वागत है। मैं आपकी चर्चा जारी रखने में कैसे मदद कर सकता हूं? 🌱`,
                             timestamp: new Date()
@@ -517,7 +528,7 @@ const AIChatbot = (props) => {
                 if (response.ok) {
                     const data = await response.json();
                     const conversationData = data.data;
-                    
+
                     // Convert backend messages to frontend format
                     const loadedMessages = conversationData.messages.map((msg, index) => ({
                         id: index + 1,
@@ -525,7 +536,7 @@ const AIChatbot = (props) => {
                         content: msg.content,
                         timestamp: new Date(msg.timestamp)
                     }));
-                    
+
                     setMessages(loadedMessages);
                 } else {
                     // Fallback to welcome message if loading fails
@@ -533,7 +544,7 @@ const AIChatbot = (props) => {
                         {
                             id: 1,
                             type: 'bot',
-                            content: selectedLanguage.startsWith('en') 
+                            content: selectedLanguage.startsWith('en')
                                 ? `Welcome back to: "${conversation.title}". How can I help you continue our discussion? 🌱`
                                 : `"${conversation.title}" पर वापस आपका स्वागत है। मैं आपकी चर्चा जारी रखने में कैसे मदद कर सकता हूं? 🌱`,
                             timestamp: new Date()
@@ -548,7 +559,7 @@ const AIChatbot = (props) => {
                 {
                     id: 1,
                     type: 'bot',
-                    content: selectedLanguage.startsWith('en') 
+                    content: selectedLanguage.startsWith('en')
                         ? `Welcome back to: "${conversation.title}". How can I help you continue our discussion? 🌱`
                         : `"${conversation.title}" पर वापस आपका स्वागत है। मैं आपकी चर्चा जारी रखने में कैसे मदद कर सकता हूं? 🌱`,
                     timestamp: new Date()
@@ -578,7 +589,7 @@ const AIChatbot = (props) => {
 
             // Remove from local state
             setConversations(prev => prev.filter(conv => conv.id !== conversationId));
-            
+
             // If current conversation is deleted, clear it
             if (currentConversation?.id === conversationId) {
                 setCurrentConversation(null);
@@ -586,7 +597,7 @@ const AIChatbot = (props) => {
                     {
                         id: 1,
                         type: 'bot',
-                        content: selectedLanguage.startsWith('en') 
+                        content: selectedLanguage.startsWith('en')
                             ? "Namaste! I'm Kisaan Guru, your agricultural expert. How can I help you with farming today? Ask me anything about crops, soil, weather, or farming techniques! 🌱"
                             : `नमस्ते! मैं किसान गुरु हूं, आपका कृषि विशेषज्ञ। आज मैं आपकी खेती में कैसे मदद कर सकता हूं? मुझसे फसलों, मिट्टी, मौसम या खेती की तकनीकों के बारे में कुछ भी पूछें! 🌱`,
                         timestamp: new Date()
@@ -610,13 +621,13 @@ const AIChatbot = (props) => {
         };
 
         setMessages(prev => [...prev, userMessage]);
-        
+
         // Update conversation title if it's the first user message
         if (currentConversation && messages.length === 1) {
-            const newTitle = inputMessage.trim().length > 30 
-                ? inputMessage.trim().substring(0, 30) + '...' 
+            const newTitle = inputMessage.trim().length > 30
+                ? inputMessage.trim().substring(0, 30) + '...'
                 : inputMessage.trim();
-            
+
             if (currentConversation.isLocal) {
                 // Update title in localStorage
                 const localConversations = JSON.parse(localStorage.getItem('kisaanChatConversations') || '[]');
@@ -626,9 +637,9 @@ const AIChatbot = (props) => {
                     localStorage.setItem('kisaanChatConversations', JSON.stringify(localConversations));
                 }
             }
-            
-            setConversations(prev => prev.map(conv => 
-                conv.id === currentConversation.id 
+
+            setConversations(prev => prev.map(conv =>
+                conv.id === currentConversation.id
                     ? { ...conv, title: newTitle }
                     : conv
             ));
@@ -666,20 +677,20 @@ const AIChatbot = (props) => {
                         timestamp: new Date()
                     };
                     setMessages(prev => [...prev, botMessage]);
-                    
+
                     // Speak the bot's response if voice is enabled
                     if (isVoiceEnabled) {
                         speakText(botMessage.content);
                     }
-                    
+
                     // Save messages to backend if conversation exists
                     if (currentConversation) {
                         await saveMessageToBackend(currentConversation.id, 'user', userMessage.content);
                         await saveMessageToBackend(currentConversation.id, 'assistant', botMessage.content);
-                        
+
                         // Update conversation message count
-                        setConversations(prev => prev.map(conv => 
-                            conv.id === currentConversation.id 
+                        setConversations(prev => prev.map(conv =>
+                            conv.id === currentConversation.id
                                 ? { ...conv, messageCount: conv.messageCount + 2 }
                                 : conv
                         ));
@@ -693,12 +704,12 @@ const AIChatbot = (props) => {
         } catch (error) {
             console.error('Chat error:', error);
             toast.error('Failed to get response. Please try again.');
-            
+
             // Add error message
             const errorMessage = {
                 id: Date.now() + 1,
                 type: 'bot',
-                content: selectedLanguage.startsWith('en') 
+                content: selectedLanguage.startsWith('en')
                     ? "I'm sorry, I'm having trouble responding right now. Please try again in a moment."
                     : "माफ़ करें, मुझे अभी जवाब देने में समस्या हो रही है। कृपया कुछ देर बाद फिर से कोशिश करें।",
                 timestamp: new Date()
@@ -711,39 +722,39 @@ const AIChatbot = (props) => {
 
     const generateBotResponse = (userInput) => {
         const input = userInput.toLowerCase();
-        
+
         if (input.includes('weather') || input.includes('climate')) {
             return "Based on current weather patterns, I recommend monitoring soil moisture levels and adjusting irrigation schedules accordingly. Consider using weather-resistant crop varieties for better yield. Would you like specific recommendations for your region? 🌤️";
         }
-        
+
         if (input.includes('pest') || input.includes('disease') || input.includes('insect')) {
             return "For pest and disease management, I suggest implementing integrated pest management (IPM) strategies. This includes crop rotation, biological controls, and minimal chemical intervention. Regular monitoring is key to early detection. 🐛";
         }
-        
+
         if (input.includes('fertilizer') || input.includes('nutrient') || input.includes('soil')) {
             return "Soil health is crucial for crop success. I recommend soil testing to determine nutrient deficiencies. Organic fertilizers like compost and manure can improve soil structure. Consider crop-specific nutrient requirements for optimal growth. 🌱";
         }
-        
+
         if (input.includes('crop') || input.includes('plant') || input.includes('harvest')) {
             return "Crop selection should be based on your climate, soil type, and market demand. I can help you choose crops that are well-suited for your growing conditions. What's your primary growing season and soil type? 🌾";
         }
-        
+
         if (input.includes('irrigation') || input.includes('water') || input.includes('drip')) {
             return "Efficient irrigation is essential for water conservation and crop health. Drip irrigation systems can reduce water waste by 30-50%. Consider soil moisture sensors for precise watering schedules. 💧";
         }
-        
+
         if (input.includes('organic') || input.includes('sustainable') || input.includes('natural')) {
             return "Organic farming practices focus on soil health, biodiversity, and natural pest control. Crop rotation, cover cropping, and composting are excellent sustainable practices. These methods can improve long-term soil fertility. 🌿";
         }
-        
+
         if (input.includes('market') || input.includes('price') || input.includes('sell')) {
             return "Market analysis is important for profitable farming. I recommend researching local market demands, building relationships with buyers, and considering value-added products. Diversification can help manage market risks. 📊";
         }
-        
+
         if (input.includes('technology') || input.includes('ai') || input.includes('digital')) {
             return "Modern farming technology includes precision agriculture tools, IoT sensors, and AI-powered crop monitoring. These technologies can optimize resource use and improve yields. Would you like to learn about specific tech solutions? 🤖";
         }
-        
+
         return "I understand you're asking about agriculture. I can help with weather analysis, pest management, soil health, crop selection, irrigation, organic farming, market strategies, and agricultural technology. Could you please be more specific about what you'd like to know? 🌾";
     };
 
@@ -772,7 +783,7 @@ const AIChatbot = (props) => {
                 e.preventDefault();
                 toggleVoice();
             }
-            
+
             // Escape to stop speech
             if (e.key === 'Escape' && currentUtterance) {
                 e.preventDefault();
@@ -788,7 +799,7 @@ const AIChatbot = (props) => {
         const now = new Date();
         const diff = now - timestamp;
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        
+
         if (days === 0) return 'Today';
         if (days === 1) return 'Yesterday';
         if (days < 7) return `${days} days ago`;
@@ -801,40 +812,31 @@ const AIChatbot = (props) => {
 
     // Available languages for Web Speech API
     const languages = [
-        { code: 'en-US', name: 'English (US)', flag: '🇺🇸' },
         { code: 'en-IN', name: 'English (India)', flag: '🇮🇳' },
         { code: 'hi-IN', name: 'हिंदी (India)', flag: '🇮🇳' },
-        { code: 'bn-IN', name: 'বাংলা (India)', flag: '🇧🇩' },
+        { code: 'bn-IN', name: 'বাংলা (India)', flag: '🇮🇳' },
         { code: 'te-IN', name: 'తెలుగు (India)', flag: '🇮🇳' },
         { code: 'ta-IN', name: 'தமிழ் (India)', flag: '🇮🇳' },
         { code: 'mr-IN', name: 'मराठी (India)', flag: '🇮🇳' },
         { code: 'gu-IN', name: 'ગુજરાતી (India)', flag: '🇮🇳' },
         { code: 'kn-IN', name: 'ಕನ್ನಡ (India)', flag: '🇮🇳' },
         { code: 'ml-IN', name: 'മലയാളം (India)', flag: '🇮🇳' },
-        { code: 'pa-IN', name: 'ਪੰਜਾਬੀ (India)', flag: '🇮🇳' },
-        { code: 'es-ES', name: 'Español (Spain)', flag: '🇪🇸' },
-        { code: 'es-MX', name: 'Español (Mexico)', flag: '🇲🇽' },
-        { code: 'fr-FR', name: 'Français (France)', flag: '🇫🇷' },
-        { code: 'de-DE', name: 'Deutsch (Germany)', flag: '🇩🇪' },
-        { code: 'zh-CN', name: '中文 (China)', flag: '🇨🇳' },
-        { code: 'ja-JP', name: '日本語 (Japan)', flag: '🇯🇵' },
-        { code: 'ko-KR', name: '한국어 (Korea)', flag: '🇰🇷' },
-        { code: 'ar-SA', name: 'العربية (Saudi Arabia)', flag: '🇸🇦' }
+        { code: 'pa-IN', name: 'ਪੰਜਾਬੀ (India)', flag: '🇮🇳' }
     ];
 
     // Auto-detect user's preferred language
     useEffect(() => {
         const userLang = navigator.language || navigator.userLanguage;
-        
+
         // Try to find exact match first
         let supportedLang = languages.find(lang => lang.code === userLang);
-        
+
         // If no exact match, try to find by base language
         if (!supportedLang) {
             const baseLang = userLang.split('-')[0];
             supportedLang = languages.find(lang => lang.code.startsWith(baseLang));
         }
-        
+
         if (supportedLang && supportedLang.code !== 'en-US') {
             setSelectedLanguage(supportedLang.code);
         }
@@ -846,7 +848,7 @@ const AIChatbot = (props) => {
             const welcomeMessage = {
                 id: messages[0].id,
                 type: 'bot',
-                content: selectedLanguage.startsWith('en') 
+                content: selectedLanguage.startsWith('en')
                     ? "Namaste! I'm Kisaan Guru, your agricultural expert. How can I help you with farming today? Ask me anything about crops, soil, weather, or farming techniques! 🌱"
                     : `नमस्ते! मैं किसान गुरु हूं, आपका कृषि विशेषज्ञ। आज मैं आपकी खेती में कैसे मदद कर सकता हूं? मुझसे फसलों, मिट्टी, मौसम या खेती की तकनीकों के बारे में कुछ भी पूछें! 🌱`,
                 timestamp: messages[0].timestamp
@@ -866,29 +868,48 @@ const AIChatbot = (props) => {
             // Create speech recognition instance
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-            
+
             // Configure recognition
             recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = selectedLanguage;
-            
+            recognition.interimResults = false; // We only want the final result.
+
+            // recognition.lang = selectedLanguage;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                setIsRecording(true);
+                toast.success('Listening... Speak now!');
+            };
+
             // Set up event handlers
             recognition.onstart = () => {
                 setIsRecording(true);
                 setIsTranscribing(true);
                 toast.success('Listening... Speak now!');
             };
-            
+
+            // CHANGE 2: Correctly process the event results.
             recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                setInputMessage(transcript);
-                toast.success('Voice transcribed successfully!');
+                // The event.results list contains all results for this recognition session.
+                // Since continuous is false, there will usually be just one.
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    // The 'isFinal' property is true when the result is complete.
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    }
+                }
+
+                if (finalTranscript) {
+                    setInputMessage(prev => prev + finalTranscript); // Append to existing text if any
+                    toast.success('Voice transcribed successfully!');
+                }
             };
-            
+
             recognition.onerror = (event) => {
                 console.error('Speech recognition error:', event.error);
                 let errorMessage = 'Speech recognition failed';
-                
+
                 switch (event.error) {
                     case 'no-speech':
                         errorMessage = 'No speech detected. Please try again.';
@@ -905,21 +926,21 @@ const AIChatbot = (props) => {
                     default:
                         errorMessage = `Speech recognition error: ${event.error}`;
                 }
-                
+
                 toast.error(errorMessage);
                 setIsRecording(false);
                 setIsTranscribing(false);
             };
-            
+
             recognition.onend = () => {
                 setIsRecording(false);
                 setIsTranscribing(false);
             };
-            
+
             // Store recognition instance and start
             setSpeechRecognition(recognition);
             recognition.start();
-            
+
         } catch (error) {
             console.error('Error starting speech recognition:', error);
             toast.error('Failed to start speech recognition. Please try again.');
@@ -981,11 +1002,10 @@ const AIChatbot = (props) => {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={toggleVoice}
-                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 border ${
-                                        isVoiceEnabled 
-                                            ? 'bg-accentGreen/20 text-accentGreen border-accentGreen/50' 
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 border ${isVoiceEnabled
+                                            ? 'bg-accentGreen/20 text-accentGreen border-accentGreen/50'
                                             : 'bg-darkGreen/50 text-cream/70 border-accentGreen/30 hover:bg-accentGreen/10 hover:text-cream'
-                                    }`}
+                                        }`}
                                     title={isVoiceEnabled ? 'Disable voice responses (Ctrl+V)' : 'Enable voice responses (Ctrl+V)'}
                                 >
                                     {isVoiceEnabled ? <FaVolumeUp size={16} /> : <FaVolumeMute size={16} />}
@@ -993,38 +1013,7 @@ const AIChatbot = (props) => {
                                         {isVoiceEnabled ? 'Voice ON' : 'Voice OFF'}
                                     </span>
                                 </motion.button>
-                                
-                                {/* Voice Settings Dropdown */}
-                                {isVoiceEnabled && availableVoices.length > 0 && (
-                                    <div className="relative">
-                                        <select
-                                            value={selectedVoice ? `${selectedVoice.name}-${selectedVoice.lang}` : ''}
-                                            onChange={(e) => {
-                                                const [name, lang] = e.target.value.split('-');
-                                                const voice = availableVoices.find(v => v.name === name && v.lang === lang);
-                                                setSelectedVoice(voice);
-                                                if (currentUtterance) {
-                                                    stopSpeech();
-                                                }
-                                            }}
-                                            className="bg-darkGreen/50 border border-accentGreen/30 rounded-lg px-3 py-2 text-cream text-sm focus:outline-none focus:border-accentGreen/50 max-w-48"
-                                        >
-                                            {availableVoices
-                                                .filter(voice => voice.lang.startsWith(selectedLanguage.split('-')[0]) || voice.lang.startsWith('en'))
-                                                .map((voice) => (
-                                                    <option 
-                                                        key={`${voice.name}-${voice.lang}`} 
-                                                        value={`${voice.name}-${voice.lang}`}
-                                                        className="bg-darkGreen text-cream"
-                                                    >
-                                                        {voice.name} ({voice.lang})
-                                                    </option>
-                                                ))
-                                            }
-                                        </select>
-                                    </div>
-                                )}
-                                
+
                                 {/* Stop Speech Button */}
                                 {currentUtterance && (
                                     <motion.button
@@ -1039,7 +1028,7 @@ const AIChatbot = (props) => {
                                     </motion.button>
                                 )}
                             </div>
-                            
+
                             {/* Language Selector */}
                             <div className="flex items-center gap-2">
                                 <FaLanguage className="text-cream/70" />
@@ -1055,21 +1044,20 @@ const AIChatbot = (props) => {
                                     ))}
                                 </select>
                             </div>
-                            
+
                             {/* Location Indicator */}
                             <div className="flex items-center gap-2">
-                                <div className={`w-3 h-3 rounded-full ${
-                                    locationPermission === 'granted' ? 'bg-green-400' : 
-                                    locationPermission === 'denied' ? 'bg-red-400' : 'bg-yellow-400'
-                                }`}></div>
+                                <div className={`w-3 h-3 rounded-full ${locationPermission === 'granted' ? 'bg-green-400' :
+                                        locationPermission === 'denied' ? 'bg-red-400' : 'bg-yellow-400'
+                                    }`}></div>
                                 <span className="text-cream/70 text-sm">
-                                    {locationPermission === 'granted' && userLocation?.city 
+                                    {locationPermission === 'granted' && userLocation?.city
                                         ? `${userLocation.city}${userLocation.state ? `, ${userLocation.state}` : ''}`
-                                        : locationPermission === 'granted' 
-                                        ? 'Location Active'
-                                        : locationPermission === 'denied'
-                                        ? 'Location Denied'
-                                        : 'Getting Location...'
+                                        : locationPermission === 'granted'
+                                            ? 'Location Active'
+                                            : locationPermission === 'denied'
+                                                ? 'Location Denied'
+                                                : 'Getting Location...'
                                     }
                                 </span>
                                 {locationPermission === 'denied' && (
@@ -1091,9 +1079,9 @@ const AIChatbot = (props) => {
                                     </svg>
                                 </button>
                             </div>
-                            
+
                             <div className="text-3xl">🤖</div>
-                            
+
                             {/* Help Tooltip */}
                             <div className="relative group">
                                 <button className="text-cream/60 hover:text-cream p-2 rounded-lg hover:bg-accentGreen/20 transition-colors" title="Keyboard shortcuts">
@@ -1217,11 +1205,10 @@ const AIChatbot = (props) => {
                                             animate={{ opacity: 1, x: 0 }}
                                             exit={{ opacity: 0, x: -20 }}
                                             transition={{ duration: 0.2 }}
-                                            className={`rounded-xl p-4 cursor-pointer transition-all duration-200 ${
-                                                currentConversation?.id === conversation.id
+                                            className={`rounded-xl p-4 cursor-pointer transition-all duration-200 ${currentConversation?.id === conversation.id
                                                     ? 'bg-gradient-to-r from-accentGreen/20 to-lightGreen/20 border border-accentGreen/40 shadow-md'
                                                     : 'hover:bg-darkGreen/60 border border-transparent hover:border-accentGreen/30 hover:shadow-md'
-                                            }`}
+                                                }`}
                                             onClick={() => selectConversation(conversation)}
                                         >
                                             <div className="flex items-start justify-between">
@@ -1276,7 +1263,7 @@ const AIChatbot = (props) => {
                                 </motion.button>
                             </div>
                         )}
-                        
+
                         {/* Messages Container */}
                         <div className="flex-1 overflow-y-auto p-6 space-y-6">
                             <AnimatePresence>
@@ -1291,21 +1278,19 @@ const AIChatbot = (props) => {
                                     >
                                         <div className={`flex items-start space-x-3 max-w-[85%] ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                                             {/* Avatar */}
-                                            <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
-                                                message.type === 'user' 
-                                                    ? 'bg-gradient-to-br from-accentGreen to-lightGreen text-white' 
+                                            <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${message.type === 'user'
+                                                    ? 'bg-gradient-to-br from-accentGreen to-lightGreen text-white'
                                                     : 'bg-gradient-to-br from-deepGreen to-darkGreen text-white border border-accentGreen/30'
-                                            }`}>
+                                                }`}>
                                                 {message.type === 'user' ? <FaUser size={18} /> : <FaRobot size={18} />}
                                             </div>
 
                                             {/* Message Content */}
                                             <div className={`flex-1 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
-                                                <div className={`inline-block p-5 rounded-2xl shadow-lg ${
-                                                    message.type === 'user'
+                                                <div className={`inline-block p-5 rounded-2xl shadow-lg ${message.type === 'user'
                                                         ? 'bg-gradient-to-r from-accentGreen to-lightGreen text-white rounded-br-lg'
                                                         : 'bg-darkGreen/60 border border-accentGreen/20 text-cream rounded-bl-lg backdrop-blur-sm'
-                                                } ${currentUtterance && message.type === 'bot' ? 'ring-2 ring-accentGreen/50' : ''}`}>
+                                                    } ${currentUtterance && message.type === 'bot' ? 'ring-2 ring-accentGreen/50' : ''}`}>
                                                     <div className="flex items-start justify-between space-x-3">
                                                         <div className="flex-1">
                                                             <p className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -1326,7 +1311,7 @@ const AIChatbot = (props) => {
                                                                         <FaVolumeUp size={14} />
                                                                     </motion.button>
                                                                 )}
-                                                                
+
                                                                 {/* Copy Button */}
                                                                 <button
                                                                     onClick={() => copyToClipboard(message.content, message.id)}
@@ -1387,7 +1372,7 @@ const AIChatbot = (props) => {
                                         rows="1"
                                         style={{ minHeight: '56px', maxHeight: '140px' }}
                                     />
-                                    
+
                                     {/* Input Action Buttons */}
                                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
                                         {/* Microphone Button */}
@@ -1396,13 +1381,12 @@ const AIChatbot = (props) => {
                                             whileTap={{ scale: 0.9 }}
                                             onClick={handleMicrophoneToggle}
                                             disabled={isTranscribing}
-                                            className={`p-2 rounded-lg transition-all duration-200 ${
-                                                isRecording 
-                                                    ? 'bg-red-500/20 text-red-400 border border-red-400/30' 
+                                            className={`p-2 rounded-lg transition-all duration-200 ${isRecording
+                                                    ? 'bg-red-500/20 text-red-400 border border-red-400/30'
                                                     : isTranscribing
-                                                    ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-400/30'
-                                                    : 'text-cream/60 hover:text-cream hover:bg-accentGreen/20'
-                                            }`}
+                                                        ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-400/30'
+                                                        : 'text-cream/60 hover:text-cream hover:bg-accentGreen/20'
+                                                }`}
                                             title={isRecording ? 'Stop recording' : isTranscribing ? 'Transcribing...' : 'Start voice input'}
                                         >
                                             {isTranscribing ? (
@@ -1423,7 +1407,7 @@ const AIChatbot = (props) => {
                                     <FaPaperPlane size={18} className="text-white" />
                                 </motion.button>
                             </div>
-                            
+
                             {/* Voice Status and Quick Suggestions */}
                             <div className="mt-4 flex flex-wrap items-center gap-3">
                                 {/* Voice Status Indicator */}
@@ -1436,7 +1420,7 @@ const AIChatbot = (props) => {
                                         )}
                                     </div>
                                 )}
-                                
+
                                 {/* Quick Suggestions */}
                                 {[
                                     "Weather advice for crops",
