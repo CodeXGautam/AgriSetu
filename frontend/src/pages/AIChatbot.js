@@ -35,7 +35,7 @@ const AIChatbot = (props) => {
     const [speechRecognition, setSpeechRecognition] = useState(null);
     
     // Text-to-Speech state
-    const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+    const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
     const [speechSynthesis, setSpeechSynthesis] = useState(null);
     const [currentUtterance, setCurrentUtterance] = useState(null);
     const [availableVoices, setAvailableVoices] = useState([]);
@@ -566,7 +566,7 @@ const AIChatbot = (props) => {
                 localStorage.setItem('kisaanChatConversations', JSON.stringify(updatedConversations));
             } else {
                 // Delete from backend
-                const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/api/v1/conversations/${conversationId}`, {
+                const response = await fetch(`${process.env.REACT_APP_BACKEND_URI}/conversations/${conversationId}`, {
                     method: 'DELETE',
                     credentials: 'include',
                 });
