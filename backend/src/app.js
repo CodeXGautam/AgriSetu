@@ -20,6 +20,7 @@ import { acknowledgeSpeechRecognition, getSpeechLanguages } from './controllers/
 import { verifyJwt } from './middleware/auth.middleware.js';
 import {  uploadAvatar } from './controllers/userController.js';
 import { upload, uploadMemory } from './middleware/multer.js';
+import { addItems, getallItems } from './controllers/marketController.js';
 
 const app = express();
 
@@ -81,6 +82,9 @@ app.post('/api/v1/speech/recognize', acknowledgeSpeechRecognition);
 app.get('/api/v1/speech/languages', getSpeechLanguages);
 
 
+//marketplace routes 
+app.post('/api/v1/market/additem', addItems);
+app.get('/api/v1/market/getallitems', getallItems);
 
 
 export default app;
