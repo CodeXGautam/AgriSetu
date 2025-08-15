@@ -78,9 +78,9 @@ conversationSchema.pre('save', function(next) {
 });
 
 // Virtual for message count
-conversationSchema.virtual('messageCount').get(function() {
-  return this.messages.length;
-});
+// conversationSchema.virtual('messageCount').get(function() {
+//   return this.messages.length;
+// });
 
 // Ensure virtual fields are serialized
 conversationSchema.set('toJSON', { virtuals: true });
