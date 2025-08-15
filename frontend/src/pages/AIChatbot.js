@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaPaperPlane, FaRobot, FaUser, FaRegCopy, FaCheck, FaPlus, FaTrash, FaHistory, FaArrowLeft, FaSearch, FaMicrophone, FaBars, FaLanguage } from 'react-icons/fa';
+import { FaPaperPlane, FaRobot, FaUser, FaRegCopy, FaCheck, FaPlus, FaTrash, FaHistory, FaArrowLeft, FaSearch, FaMicrophone, FaBars, FaLanguage, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 
@@ -33,6 +33,14 @@ const AIChatbot = (props) => {
     const [isRecording, setIsRecording] = useState(false);
     const [isTranscribing, setIsTranscribing] = useState(false);
     const [speechRecognition, setSpeechRecognition] = useState(null);
+    
+    // Text-to-Speech state
+    const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
+    const [speechSynthesis, setSpeechSynthesis] = useState(null);
+    const [currentUtterance, setCurrentUtterance] = useState(null);
+    const [availableVoices, setAvailableVoices] = useState([]);
+    const [selectedVoice, setSelectedVoice] = useState(null);
+    
     // Location state
     const [userLocation, setUserLocation] = useState(null);
     const [locationPermission, setLocationPermission] = useState('prompt');
@@ -41,6 +49,92 @@ const AIChatbot = (props) => {
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    // Initialize speech synthesis
+    useEffect(() => {
+        if ('speechSynthesis' in window) {
+            const synthesis = window.speechSynthesis;
+            setSpeechSynthesis(synthesis);
+            
+            // Load available voices
+            const loadVoices = () => {
+                const voices = synthesis.getVoices();
+                setAvailableVoices(voices);
+                
+                // Auto-select voice based on language
+                const preferredVoice = voices.find(voice => 
+                    voice.lang === selectedLanguage || 
+                    voice.lang.startsWith(selectedLanguage.split('-')[0])
+                ) || voices.find(voice => voice.lang.startsWith('en')) || voices[0];
+                
+                setSelectedVoice(preferredVoice);
+            };
+            
+            // Load voices when they become available
+            if (synthesis.getVoices().length > 0) {
+                loadVoices();
+            } else {
+                synthesis.onvoiceschanged = loadVoices;
+            }
+        }
+    }, [selectedLanguage]);
+
+    // Function to speak text
+    const speakText = (text) => {
+        if (!speechSynthesis || !isVoiceEnabled || !selectedVoice) return;
+        
+        // Stop any current speech
+        if (currentUtterance) {
+            speechSynthesis.cancel();
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.voice = selectedVoice;
+        utterance.rate = 0.9; // Slightly slower for better comprehension
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        utterance.onstart = () => {
+            setCurrentUtterance(utterance);
+        };
+        
+        utterance.onend = () => {
+            setCurrentUtterance(null);
+        };
+        
+        utterance.onerror = (event) => {
+            console.error('Speech synthesis error:', event.error);
+            setCurrentUtterance(null);
+            toast.error('Speech synthesis failed. Please try again.');
+        };
+        
+        speechSynthesis.speak(utterance);
+    };
+
+    // Function to stop speech
+    const stopSpeech = () => {
+        if (speechSynthesis) {
+            speechSynthesis.cancel();
+            setCurrentUtterance(null);
+        }
+    };
+
+    // Toggle voice feature
+    const toggleVoice = () => {
+        if (!speechSynthesis) {
+            toast.error('Speech synthesis is not supported in this browser');
+            return;
+        }
+        
+        setIsVoiceEnabled(!isVoiceEnabled);
+        
+        if (isVoiceEnabled) {
+            stopSpeech();
+            toast.success('Voice responses disabled');
+        } else {
+            toast.success('Voice responses enabled');
+        }
     };
 
     // Request user location
@@ -179,6 +273,13 @@ const AIChatbot = (props) => {
         requestLocation();
         // Load existing conversations from backend
         loadConversations();
+        
+        // Cleanup function to stop speech when component unmounts
+        return () => {
+            if (speechSynthesis) {
+                speechSynthesis.cancel();
+            }
+        };
     }, []);
 
     // Load conversations when user authentication status changes
@@ -566,6 +667,11 @@ const AIChatbot = (props) => {
                     };
                     setMessages(prev => [...prev, botMessage]);
                     
+                    // Speak the bot's response if voice is enabled
+                    if (isVoiceEnabled) {
+                        speakText(botMessage.content);
+                    }
+                    
                     // Save messages to backend if conversation exists
                     if (currentConversation) {
                         await saveMessageToBackend(currentConversation.id, 'user', userMessage.content);
@@ -657,6 +763,26 @@ const AIChatbot = (props) => {
             handleSendMessage();
         }
     };
+
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            // Ctrl/Cmd + V to toggle voice
+            if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                e.preventDefault();
+                toggleVoice();
+            }
+            
+            // Escape to stop speech
+            if (e.key === 'Escape' && currentUtterance) {
+                e.preventDefault();
+                stopSpeech();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [currentUtterance]);
 
     const formatTimestamp = (timestamp) => {
         const now = new Date();
@@ -849,6 +975,71 @@ const AIChatbot = (props) => {
                             </div>
                         </div>
                         <div className="flex items-center space-x-4">
+                            {/* Voice Controls */}
+                            <div className="flex items-center gap-2">
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={toggleVoice}
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 border ${
+                                        isVoiceEnabled 
+                                            ? 'bg-accentGreen/20 text-accentGreen border-accentGreen/50' 
+                                            : 'bg-darkGreen/50 text-cream/70 border-accentGreen/30 hover:bg-accentGreen/10 hover:text-cream'
+                                    }`}
+                                    title={isVoiceEnabled ? 'Disable voice responses (Ctrl+V)' : 'Enable voice responses (Ctrl+V)'}
+                                >
+                                    {isVoiceEnabled ? <FaVolumeUp size={16} /> : <FaVolumeMute size={16} />}
+                                    <span className="text-sm font-medium hidden sm:inline">
+                                        {isVoiceEnabled ? 'Voice ON' : 'Voice OFF'}
+                                    </span>
+                                </motion.button>
+                                
+                                {/* Voice Settings Dropdown */}
+                                {isVoiceEnabled && availableVoices.length > 0 && (
+                                    <div className="relative">
+                                        <select
+                                            value={selectedVoice ? `${selectedVoice.name}-${selectedVoice.lang}` : ''}
+                                            onChange={(e) => {
+                                                const [name, lang] = e.target.value.split('-');
+                                                const voice = availableVoices.find(v => v.name === name && v.lang === lang);
+                                                setSelectedVoice(voice);
+                                                if (currentUtterance) {
+                                                    stopSpeech();
+                                                }
+                                            }}
+                                            className="bg-darkGreen/50 border border-accentGreen/30 rounded-lg px-3 py-2 text-cream text-sm focus:outline-none focus:border-accentGreen/50 max-w-48"
+                                        >
+                                            {availableVoices
+                                                .filter(voice => voice.lang.startsWith(selectedLanguage.split('-')[0]) || voice.lang.startsWith('en'))
+                                                .map((voice) => (
+                                                    <option 
+                                                        key={`${voice.name}-${voice.lang}`} 
+                                                        value={`${voice.name}-${voice.lang}`}
+                                                        className="bg-darkGreen text-cream"
+                                                    >
+                                                        {voice.name} ({voice.lang})
+                                                    </option>
+                                                ))
+                                            }
+                                        </select>
+                                    </div>
+                                )}
+                                
+                                {/* Stop Speech Button */}
+                                {currentUtterance && (
+                                    <motion.button
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={stopSpeech}
+                                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/20 text-red-400 border border-red-400/30 transition-all duration-200"
+                                        title="Stop current speech"
+                                    >
+                                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                        <span className="text-sm font-medium hidden sm:inline">Stop</span>
+                                    </motion.button>
+                                )}
+                            </div>
+                            
                             {/* Language Selector */}
                             <div className="flex items-center gap-2">
                                 <FaLanguage className="text-cream/70" />
@@ -902,6 +1093,36 @@ const AIChatbot = (props) => {
                             </div>
                             
                             <div className="text-3xl">🤖</div>
+                            
+                            {/* Help Tooltip */}
+                            <div className="relative group">
+                                <button className="text-cream/60 hover:text-cream p-2 rounded-lg hover:bg-accentGreen/20 transition-colors" title="Keyboard shortcuts">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </button>
+                                <div className="absolute right-0 top-full mt-2 w-64 bg-darkGreen/95 border border-accentGreen/30 rounded-xl p-4 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    <h3 className="text-cream font-semibold mb-2">Keyboard Shortcuts</h3>
+                                    <div className="space-y-2 text-sm text-cream/80">
+                                        <div className="flex justify-between">
+                                            <span>Toggle Voice:</span>
+                                            <kbd className="px-2 py-1 bg-accentGreen/20 rounded text-xs">Ctrl+V</kbd>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Stop Speech:</span>
+                                            <kbd className="px-2 py-1 bg-accentGreen/20 rounded text-xs">Esc</kbd>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Send Message:</span>
+                                            <kbd className="px-2 py-1 bg-accentGreen/20 rounded text-xs">Enter</kbd>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>New Line:</span>
+                                            <kbd className="px-2 py-1 bg-accentGreen/20 rounded text-xs">Shift+Enter</kbd>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1084,7 +1305,7 @@ const AIChatbot = (props) => {
                                                     message.type === 'user'
                                                         ? 'bg-gradient-to-r from-accentGreen to-lightGreen text-white rounded-br-lg'
                                                         : 'bg-darkGreen/60 border border-accentGreen/20 text-cream rounded-bl-lg backdrop-blur-sm'
-                                                }`}>
+                                                } ${currentUtterance && message.type === 'bot' ? 'ring-2 ring-accentGreen/50' : ''}`}>
                                                     <div className="flex items-start justify-between space-x-3">
                                                         <div className="flex-1">
                                                             <p className="text-sm leading-relaxed whitespace-pre-wrap">
@@ -1092,12 +1313,29 @@ const AIChatbot = (props) => {
                                                             </p>
                                                         </div>
                                                         {message.type === 'bot' && (
-                                                            <button
-                                                                onClick={() => copyToClipboard(message.content, message.id)}
-                                                                className="flex-shrink-0 text-cream/60 hover:text-cream transition-colors p-1 rounded-lg hover:bg-accentGreen/20"
-                                                            >
-                                                                {copiedId === message.id ? <FaCheck size={14} /> : <FaRegCopy size={14} />}
-                                                            </button>
+                                                            <div className="flex items-center gap-1">
+                                                                {/* Play/Speak Button */}
+                                                                {isVoiceEnabled && (
+                                                                    <motion.button
+                                                                        whileHover={{ scale: 1.1 }}
+                                                                        whileTap={{ scale: 0.9 }}
+                                                                        onClick={() => speakText(message.content)}
+                                                                        className="flex-shrink-0 text-cream/60 hover:text-accentGreen transition-colors p-1 rounded-lg hover:bg-accentGreen/20"
+                                                                        title="Listen to this message"
+                                                                    >
+                                                                        <FaVolumeUp size={14} />
+                                                                    </motion.button>
+                                                                )}
+                                                                
+                                                                {/* Copy Button */}
+                                                                <button
+                                                                    onClick={() => copyToClipboard(message.content, message.id)}
+                                                                    className="flex-shrink-0 text-cream/60 hover:text-cream transition-colors p-1 rounded-lg hover:bg-accentGreen/20"
+                                                                    title="Copy message"
+                                                                >
+                                                                    {copiedId === message.id ? <FaCheck size={14} /> : <FaRegCopy size={14} />}
+                                                                </button>
+                                                            </div>
                                                         )}
                                                     </div>
                                                     <div className={`text-xs mt-3 ${message.type === 'user' ? 'text-white/70' : 'text-cream/60'}`}>
@@ -1186,8 +1424,20 @@ const AIChatbot = (props) => {
                                 </motion.button>
                             </div>
                             
-                            {/* Quick Suggestions */}
-                            <div className="mt-4 flex flex-wrap gap-3">
+                            {/* Voice Status and Quick Suggestions */}
+                            <div className="mt-4 flex flex-wrap items-center gap-3">
+                                {/* Voice Status Indicator */}
+                                {isVoiceEnabled && (
+                                    <div className="flex items-center gap-2 px-3 py-2 bg-accentGreen/10 border border-accentGreen/30 rounded-xl text-sm text-accentGreen">
+                                        <FaVolumeUp size={14} />
+                                        <span>Voice responses enabled</span>
+                                        {currentUtterance && (
+                                            <div className="w-3 h-3 bg-accentGreen rounded-full animate-pulse"></div>
+                                        )}
+                                    </div>
+                                )}
+                                
+                                {/* Quick Suggestions */}
                                 {[
                                     "Weather advice for crops",
                                     "Pest control methods",
