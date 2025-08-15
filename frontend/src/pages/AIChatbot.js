@@ -968,7 +968,7 @@ if (!newVoice) {
 
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-deepGreen via-darkGreen to-gradientLight">
+        <div className="min-h-screen bg-gradient-to-br from-deepGreen via-darkGreen to-gradientLight overflow-hidden">
             {/* Top Navigation Bar */}
             <div className="bg-gradient-to-r from-deepGreen/95 to-darkGreen/95 backdrop-blur-sm border-b border-accentGreen/20 shadow-lg">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -995,7 +995,7 @@ if (!newVoice) {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex items-center space-x-4">
+                        <div className="items-center space-x-4 hidden md:flex lg:flex">
                             {/* Voice Controls */}
                             <div className="flex items-center gap-2">
                                 <motion.button
@@ -1165,7 +1165,7 @@ if (!newVoice) {
                                     )}
                                     <button
                                         onClick={() => setSidebarOpen(false)}
-                                        className="text-cream/60 hover:text-cream transition-colors p-1 rounded-lg hover:bg-accentGreen/20"
+                                        className="text-cream/60 hover:text-cream transition-colors p-1 rounded-lg hover:bg-accentGreen/20 text-3xl"
                                     >
                                         ×
                                     </button>
@@ -1182,7 +1182,7 @@ if (!newVoice) {
                             </motion.button>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                        <div className="flex-1 overflow-y-auto p-4 space-y-2 scrollbar">
                             {conversationsLoading ? (
                                 <div className="flex items-center justify-center py-8">
                                     <div className="flex space-x-2">
@@ -1370,7 +1370,7 @@ if (!newVoice) {
                                         placeholder="Ask me anything about agriculture, farming, crops, weather, pests, or farming technology..."
                                         className="w-full p-4 pr-32 bg-darkGreen/50 border border-accentGreen/30 rounded-2xl text-cream placeholder-cream/60 resize-none focus:outline-none focus:border-accentGreen focus:ring-2 focus:ring-accentGreen/20 transition-all duration-200 backdrop-blur-sm shadow-lg"
                                         rows="1"
-                                        style={{ minHeight: '56px', maxHeight: '140px' }}
+                                        style={{ minHeight: '56px', maxHeight: '140px', scrollbarWidth:'none' }}
                                     />
 
                                     {/* Input Action Buttons */}
