@@ -24,8 +24,7 @@ const Home = (props) => {
     const fetchNews = async () => {
         try {
             setLoading(true);
-            // const url = `${process.env.REACT_APP_BACKEND_URI}/news/agriculture?language=en&page=1`;
-            const url = ``;
+            const url = `${process.env.REACT_APP_BACKEND_URI}/news/agriculture?language=en&page=1`;
             const response = await fetch(url, {
                 credentials: 'include',
                 headers: {
