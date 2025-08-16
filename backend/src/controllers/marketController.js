@@ -1,4 +1,5 @@
 import MarketItem from "../models/market.model.js";
+import User from "../models/user.model.js";
 
 export const addItems = async (req, res) => {
     try {
@@ -166,5 +167,73 @@ export const removeItemFromCart = async (req, res) => {
     catch (error) {
         console.error("Error:", error.message);
         return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+}
+
+// Get cart items with full product details using aggregation
+export const getCartItemsWithDetails = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Aggregation pipeline to get cart items with full product details
+        const cartWithDetails = await User.aggregate([
+            // Match the specific user
+            { $match: { _id: userId } },
+            
+            // Unwind the cartItems array to work with individual items
+            { $unwind: "$cartItems" },
+            
+            // Lookup to join with MarketItem collection
+            {
+                $lookup: {
+                    from: "marketitems", // MongoDB collection name (lowercase + pluralized)
+                    localField: "cartItems.itemId",
+                    foreignField: "_id",
+                    as: "productDetails"
+                }
+            },
+            
+            // Unwind the productDetails array (should have only one match)
+            { $unwind: "$productDetails" },
+            
+            // Project the final structure
+            {
+                $project: {
+                    _id: 0,
+                    itemId: "$cartItems.itemId",
+                    quantity: "$cartItems.quantity",
+                    productName: "$productDetails.productName",
+                    description: "$productDetails.description",
+                    imageUrl: "$productDetails.imageUrl",
+                    price: "$productDetails.price",
+                    category: "$productDetails.category",
+                    availableQuantity: "$productDetails.quantity",
+                    totalPrice: { $multiply: ["$cartItems.quantity", "$productDetails.price"] }
+                }
+            }
+        ]);
+
+        // Calculate cart summary
+        const cartSummary = {
+            totalItems: cartWithDetails.length,
+            totalQuantity: cartWithDetails.reduce((sum, item) => sum + item.quantity, 0),
+            totalAmount: cartWithDetails.reduce((sum, item) => sum + item.totalPrice, 0)
+        };
+
+        return res.status(200).json({
+            success: true,
+            data: {
+                cartItems: cartWithDetails,
+                summary: cartSummary
+            }
+        });
+
+    } catch (error) {
+        console.error("Error fetching cart details:", error.message);
+        return res.status(500).json({ 
+            success: false, 
+            message: "Internal server error",
+            error: error.message 
+        });
     }
 }
