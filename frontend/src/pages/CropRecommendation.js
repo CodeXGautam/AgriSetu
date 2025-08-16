@@ -19,6 +19,7 @@ import {
 } from 'react-icons/fa';
 import Sidebar from '../Components/Sidebar';
 import Footer from '../Components/Footer';
+import APIAnimation from '../Components/API-animation';
 
 const CropRecommendation = (props) => {
   const { loggedIn, setLoggedIn } = props;
@@ -200,6 +201,9 @@ const CropRecommendation = (props) => {
   return (
     <div className="flex w-full h-screen bg-gradient-to-r from-deepGreen to-gradientLight text-cream">
       <Sidebar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+      
+      {/* API Loading Animation */}
+      <APIAnimation type="recommendation" isVisible={loading} />
       
       <div className="w-full h-full bg-darkGreen flex flex-col gap-6 transition-all duration-300 ease-in-out rounded-md shadow-md shadow-darkBrown p-4 overflow-y-auto">
         
