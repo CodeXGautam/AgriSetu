@@ -18,9 +18,10 @@ import {
 } from './controllers/chatController.js';
 import { acknowledgeSpeechRecognition, getSpeechLanguages } from './controllers/whisperController.js';
 import { verifyJwt } from './middleware/auth.middleware.js';
-import {  uploadAvatar } from './controllers/userController.js';
 import { upload, uploadMemory } from './middleware/multer.js';
-import { addItems, addtocart, getallItems, increaseCartItemQuantity ,decreaseCartItemQuantity} from './controllers/marketController.js';
+import { addItems, addtocart, getallItems, increaseCartItemQuantity ,decreaseCartItemQuantity, getCartItemsWithDetails} from './controllers/marketController.js';
+import { getCropRecommendations, getCropDetails, saveCropSelection } from './controllers/cropRecommendationController.js';
+import { getCropPricingAnalytics, getCropPriceTrends } from './controllers/analyticsController.js';
 
 const app = express();
 
@@ -88,5 +89,15 @@ app.get('/api/v1/market/getallitems', getallItems);
 app.post('/api/v1/market/addtocart', verifyJwt, addtocart);
 app.put('/api/v1/market/increasequantity', verifyJwt, increaseCartItemQuantity);
 app.put('/api/v1/market/decreasequantity', verifyJwt, decreaseCartItemQuantity);
+app.get('/api/v1/market/cart-details', verifyJwt, getCartItemsWithDetails);
+
+// Crop recommendation routes
+app.post('/api/v1/crop-recommendations', verifyJwt, getCropRecommendations);
+app.get('/api/v1/crops/:cropName', getCropDetails);
+app.post('/api/v1/crop-selection', verifyJwt, saveCropSelection);
+
+// Analytics routes
+app.post('/api/v1/analytics/crop-pricing', verifyJwt, getCropPricingAnalytics);
+app.post('/api/v1/analytics/crop-trends', verifyJwt, getCropPriceTrends);
 
 export default app;
