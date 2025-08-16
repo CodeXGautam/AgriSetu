@@ -6,6 +6,7 @@ import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import Home from './pages/Home';
 import Market from './pages/Market';
+import Checkout from './pages/Checkout';
 
 // Lazy load components
 const AgriNews = lazy(() => import('./pages/AgriNews'));
@@ -170,6 +171,21 @@ const App = () => {
               >
                 <Suspense fallback={<LoadingAnimation />}>
                   <Market />
+                </Suspense>
+              </motion.div>
+            } />
+          )}
+          {loggedIn && (
+            <Route path='/cart' element={
+              <motion.div
+                key="cart"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Suspense fallback={<LoadingAnimation />}>
+                  <Checkout/>
                 </Suspense>
               </motion.div>
             } />
