@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import Home from './pages/Home';
+import Market from './pages/Market';
 
 // Lazy load components
 const AgriNews = lazy(() => import('./pages/AgriNews'));
@@ -64,7 +65,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="bg-gradient-to-r from-deepGreen to-gradientLight min-h-screen flex flex-col relative">
+    <div className="bg-gradient-to-b from-green-300 via-yellow-100 to-green-300 min-h-screen flex flex-col relative">
       <AnimatePresence mode="wait">
         <Routes>
           <Route path='/' element={
@@ -154,6 +155,21 @@ const App = () => {
               >
                 <Suspense fallback={<LoadingAnimation />}>
                   <DiseaseDetection />
+                </Suspense>
+              </motion.div>
+            } />
+          )}
+          {loggedIn && (
+            <Route path='/marketplace' element={
+              <motion.div
+                key="marketplace"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Suspense fallback={<LoadingAnimation />}>
+                  <Market />
                 </Suspense>
               </motion.div>
             } />
