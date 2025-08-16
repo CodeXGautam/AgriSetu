@@ -15,6 +15,7 @@ import {
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import APIAnimation from '../Components/API-animation';
 
 const Analytics = () => {
   const navigate = useNavigate();
@@ -142,6 +143,9 @@ const Analytics = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-deepGreen to-gradientLight text-cream">
+      {/* API Loading Animation */}
+      <APIAnimation type="analytics" isVisible={loading || loadingTrends} />
+      
       <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header with Back Button */}
         <motion.div
