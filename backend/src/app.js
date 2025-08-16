@@ -26,7 +26,7 @@ import { getCropPricingAnalytics, getCropPriceTrends } from './controllers/analy
 const app = express();
 
 app.use(cors({
-  origin:['http://localhost:3000','https://img.favpng.com/22/20/12/crop-clip-art-png-favpng-nqpSRgidPzwXf1UYKddBUx5uM.jpg'],
+  origin:['http://localhost:3000','https://img.favpng.com/22/20/12/crop-clip-art-png-favpng-nqpSRgidPzwXf1UYKddBUx5uM.jpg','https://agrisetu-1.onrender.com'],
   credentials: true,
   exposedHeaders: ['set-cookie']
 }));
