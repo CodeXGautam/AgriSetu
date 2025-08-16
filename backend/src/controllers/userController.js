@@ -303,6 +303,29 @@ const uploadAvatar = async (req, res) => {
     }
 };
 
+// Update user info (only username)
+const updateUserInfo = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { firstname } = req.body;
+        if (!firstname) {
+            return res.status(400).json({ message: "Name is required" });
+        }
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { firstname: firstname },
+            { new: true }
+        ).select("-password -refreshToken");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({ user, message: "User info updated successfully" });
+    } catch (error) {
+        console.error("Error updating user info:", error.message);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 export {
     registerUser,
     loginUser,
@@ -310,5 +333,6 @@ export {
     logoutUser,
     refreshAccessToken,
     googleAuthCode,
-    uploadAvatar
+    uploadAvatar,
+    updateUserInfo
 };
