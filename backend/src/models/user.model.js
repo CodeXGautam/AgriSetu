@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken';
 
 
+
 const userSchema = new mongoose.Schema({
     firstname: {
         type: String,
@@ -42,11 +43,16 @@ const userSchema = new mongoose.Schema({
         default: null,
     },
 
-    interviews : [
+    cartItems:[
         {
-            type : mongoose.Schema.Types.ObjectId,
-            ref: "Interview",
-            default: null,
+            itemId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'MarketItem'
+            },
+            quantity: {
+                type: Number,
+                default: 0,
+            }
         }
     ]
 },
