@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { registerUser, loginUser, refreshAccessToken, logoutUser,getCurrentUser, googleAuthCode } from './controllers/userController.js';
+import { registerUser, loginUser, refreshAccessToken, logoutUser,getCurrentUser, googleAuthCode, updateUserInfo } from './controllers/userController.js';
 import { getAgricultureNews } from './controllers/newsController.js';
 import { getWeatherInfo } from './controllers/weatherController.js';
 import { analyzePlantDisease, agriculturalChatbot } from './controllers/chatmodelController.js';
@@ -46,6 +46,7 @@ app.post('/api/v1/register', registerUser);
 app.post('/api/v1/login', loginUser);
 app.post('/api/v1/refresh-token', refreshAccessToken);
 app.get('/api/v1/getUser',verifyJwt, getCurrentUser);
+app.put('/api/v1/user/update', verifyJwt, updateUserInfo);
 app.get('/api/v1/logout',verifyJwt, logoutUser);
 app.post('/api/v1/auth/google-auth-code', googleAuthCode);
 
