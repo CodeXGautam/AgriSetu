@@ -9,6 +9,7 @@ import Market from './pages/Market';
 import Checkout from './pages/Checkout';
 import CropRecommendation from './pages/CropRecommendation';
 import Analytics from './pages/Analytics';
+import Settings from './pages/Settings';
 
 // Lazy load components
 const AgriNews = lazy(() => import('./pages/AgriNews'));
@@ -218,6 +219,21 @@ const App = () => {
               >
                 <Suspense fallback={<LoadingAnimation />}>
                   <Analytics/>
+                </Suspense>
+              </motion.div>
+            } />
+          )}
+          {loggedIn && (
+            <Route path='/settings' element={
+              <motion.div
+                key="settings"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Suspense fallback={<LoadingAnimation />}>
+                  <Settings/>
                 </Suspense>
               </motion.div>
             } />
