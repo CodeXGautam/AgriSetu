@@ -20,6 +20,7 @@ import { acknowledgeSpeechRecognition, getSpeechLanguages } from './controllers/
 import { verifyJwt } from './middleware/auth.middleware.js';
 import { upload, uploadMemory } from './middleware/multer.js';
 import { addItems, addtocart, getallItems, increaseCartItemQuantity ,decreaseCartItemQuantity, getCartItemsWithDetails} from './controllers/marketController.js';
+import { analyzeCartCommand } from './controllers/aiCartController.js';
 import { getCropRecommendations, getCropDetails, saveCropSelection } from './controllers/cropRecommendationController.js';
 import { getCropPricingAnalytics, getCropPriceTrends } from './controllers/analyticsController.js';
 
@@ -87,6 +88,7 @@ app.get('/api/v1/speech/languages', getSpeechLanguages);
 //marketplace routes 
 app.post('/api/v1/market/additem', addItems);
 app.get('/api/v1/market/getallitems', getallItems);
+app.post('/api/v1/market/analyze-command', verifyJwt, analyzeCartCommand);
 app.post('/api/v1/market/addtocart', verifyJwt, addtocart);
 app.put('/api/v1/market/increasequantity', verifyJwt, increaseCartItemQuantity);
 app.put('/api/v1/market/decreasequantity', verifyJwt, decreaseCartItemQuantity);
