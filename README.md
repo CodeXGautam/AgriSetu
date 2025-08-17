@@ -6,12 +6,12 @@ Kisaantra is a comprehensive agricultural ecosystem designed to empower Indian f
 
 ## 🌟 Features
 
-### 1. AI-Powered Marketplace
-- Voice-enabled shopping experience
-- Real-time voice recognition and search
-- Intelligent cart management with voice commands
-- Interactive AI assistant for product recommendations
-![Marketplace](frontend/src/images/MarketPlace.png)
+
+### 1. AI Chatbot Assistant
+- 24/7 farming assistance
+- Crop-specific guidance
+- Weather updates and alerts
+![ChatBot](frontend/src/images/ChatBot.png)
 
 ### 2. Crop Management
 - Advanced crop recommendation system
@@ -33,11 +33,12 @@ Kisaantra is a comprehensive agricultural ecosystem designed to empower Indian f
 ![News English](frontend/src/images/NewsEnglish.png)
 ![News Hindi](frontend/src/images/NewsHindi.png)
 
-### 5. AI Chatbot Assistant
-- 24/7 farming assistance
-- Crop-specific guidance
-- Weather updates and alerts
-![ChatBot](frontend/src/images/ChatBot.png)
+### 5. AI-Powered Marketplace
+- Voice-enabled shopping experience
+- Real-time voice recognition and search
+- Intelligent cart management with voice commands
+- Interactive AI assistant for product recommendations
+![Marketplace](frontend/src/images/MarketPlace.png)
 
 ## 🛠️ Tech Stack
 
@@ -58,12 +59,12 @@ Kisaantra is a comprehensive agricultural ecosystem designed to empower Indian f
 ### AI/ML
 - LangChain
 - Mistral AI
-- TensorFlow/PyTorch for crop disease detection
+- PyTorch for crop disease detection
 - Machine Learning models for crop recommendations
 
 ### Cloud & Deployment
 - MongoDB Atlas
-- Railway/Vercel for hosting
+- Render for hosting
 - Cloudinary for image management
 
 ## 🚀 Installation & Setup
@@ -99,7 +100,7 @@ Create .env files in both frontend and backend directories:
 
 Frontend (.env):
 ```
-REACT_APP_BACKEND_URI=http://localhost:5000
+REACT_APP_BACKEND_URI=http://localhost:8000
 ```
 
 Backend (.env):
@@ -110,7 +111,7 @@ MISTRAL_API_KEY=your_mistral_api_key
 ```
 
 ## 🌐 Live Demo
-[Visit Kisaantra](https://kisaantra.vercel.app)
+[Visit AgriSetu](https://agrisetu-1.onrender.com)
 
 ## 📱 User Interface
 
