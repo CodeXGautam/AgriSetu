@@ -11,12 +11,14 @@ Kisaantra is a comprehensive agricultural ecosystem designed to empower Indian f
 - 24/7 farming assistance
 - Crop-specific guidance
 - Weather updates and alerts
+
 ![ChatBot](frontend/src/images/ChatBot.png)
 
 ### 2. Crop Management
 - Advanced crop recommendation system
 - Disease detection using AI
 - Real-time crop analysis
+
 ![Crop Recommendation](frontend/src/images/CropRecommendation.png)
 ![Disease Detection](frontend/src/images/DiseaseDetection.png)
 
@@ -24,12 +26,14 @@ Kisaantra is a comprehensive agricultural ecosystem designed to empower Indian f
 - Real-time market trends
 - Price prediction
 - Supply chain insights
+
 ![Market Analysis](frontend/src/images/MarketAnalysis.png)
 
 ### 4. Multilingual News Feed
 - Agricultural news in English
 - Hindi language support
 - Real-time updates
+
 ![News English](frontend/src/images/NewsEnglish.png)
 ![News Hindi](frontend/src/images/NewsHindi.png)
 
@@ -38,6 +42,7 @@ Kisaantra is a comprehensive agricultural ecosystem designed to empower Indian f
 - Real-time voice recognition and search
 - Intelligent cart management with voice commands
 - Interactive AI assistant for product recommendations
+
 ![Marketplace](frontend/src/images/MarketPlace.png)
 
 ## 🛠️ Tech Stack
@@ -130,8 +135,9 @@ We welcome contributions! Please feel free to submit a Pull Request.
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 👥 Team
-- [Your Name] - Full Stack Developer & AI Integration
-- [Other Team Members]
+- The 404s- 
+- Himanshu Sharma
+- Hemant Bhakar
 
 ## 🙏 Acknowledgments
 Special thanks to all the farmers who provided valuable feedback and insights during the development of this platform.
