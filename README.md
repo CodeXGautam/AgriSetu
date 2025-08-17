@@ -2,6 +2,8 @@
 
 Kisaantra is a comprehensive agricultural ecosystem designed to empower Indian farmers with cutting-edge AI solutions. Built with love and innovation, this platform brings together various tools and technologies to make farming smarter and more efficient.
 
+[Visit AgriSetu](https://agrisetu-1.onrender.com)
+
 ![Landing Page](frontend/src/images/LandingPage.png)
 
 ## 🌟 Features
@@ -138,9 +140,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - The 404s- 
 - Himanshu Sharma
 - Hemant Bhakar
-
-## 🙏 Acknowledgments
-Special thanks to all the farmers who provided valuable feedback and insights during the development of this platform.
 
 ---
 Made with ❤️ for Indian Farmers 🌾
