@@ -47,7 +47,96 @@ Kisaantra is a comprehensive agricultural ecosystem designed to empower Indian f
 
 ![Marketplace](frontend/src/images/MarketPlace.png)
 
-## 🛠️ Tech Stack
+## � Project Structure
+
+```
+kisaantra/
+├── README.md
+├── backend/
+│   ├── package.json
+│   ├── public/
+│   │   └── temp/
+│   └── src/
+│       ├── app.js
+│       ├── constants.js
+│       ├── index.js
+│       ├── nodemon.json
+│       ├── controllers/
+│       │   ├── aiCartController.js
+│       │   ├── analyticsController.js
+│       │   ├── chatController.js
+│       │   ├── chatmodelController.js
+│       │   ├── cropRecommendationController.js
+│       │   ├── imageController.js
+│       │   ├── marketController.js
+│       │   ├── newsController.js
+│       │   ├── translationController.js
+│       │   ├── userController.js
+│       │   ├── weatherController.js
+│       │   └── whisperController.js
+│       ├── db/
+│       │   └── db.js
+│       ├── middleware/
+│       │   ├── auth.middleware.js
+│       │   └── multer.js
+│       ├── models/
+│           ├── chat.model.js
+│           ├── market.model.js
+│           └── user.model.js
+│      
+├── frontend/
+│   ├── package.json
+│   ├── README.md
+│   ├── tailwind.config.js
+│   ├── public/
+│   │   ├── favicon.ico
+│   │   ├── index.html
+│   │   ├── logo192.png
+│   │   ├── logo512.png
+│   │   ├── manifest.json
+│   │   └── robots.txt
+│   └── src/
+│       ├── App.js
+│       ├── index.css
+│       ├── index.js
+│       ├── Components/
+│       │   ├── API-animation.js
+│       │   ├── Footer.js
+│       │   ├── LoadingAnimation.js
+│       │   ├── Navbar.js
+│       │   └── Sidebar.js
+│       ├── images/
+│       │   ├── ChatBot.png
+│       │   ├── CheckoutPage.png
+│       │   ├── CropRecommendation.png
+│       │   ├── DiseaseDetection.png
+│       │   ├── HomePage.png
+│       │   ├── LandingPage.png
+│       │   ├── LoginPage.png
+│       │   ├── MarketAnalysis.png
+│       │   ├── MarketPlace.png
+│       │   ├── NewsEnglish.png
+│       │   ├── NewsHindi.png
+│       │   └── RegisterPage.png
+│       └── pages/
+│           ├── AgriNews.js
+│           ├── AIChatbot.js
+│           ├── Analytics.js
+│           ├── Checkout.js
+│           ├── CropRecommendation.js
+│           ├── DiseaseDetection.js
+│           ├── Home.js
+│           ├── LandingPage.js
+│           ├── LoginPage.js
+│           ├── Market.js
+│           ├── RegisterPage.js
+│           └── Settings.js
+└── ml_model/
+    ├── requirements.txt
+    └── server.py
+```
+
+## �🛠️ Tech Stack
 
 ### Frontend
 - React.js
