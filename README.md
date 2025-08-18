@@ -3,7 +3,7 @@
 AgriSetu is a comprehensive agricultural ecosystem designed to empower Indian farmers with cutting-edge AI solutions. Built with love and innovation, this platform brings together various tools and technologies to make farming smarter and more efficient.
 
 <p align="center">
-  🔗 <a href="https://routewiz.onrender.com" target="_blank"><strong>Visit AgriSetu</strong></a>
+  🔗 <a href="https://agrisetu-1.onrender.com" target="_blank"><strong>Visit AgriSetu</strong></a>
 </p>
 
 ![Landing Page](frontend/src/images/LandingPage.png)
