@@ -1,8 +1,10 @@
-# Kisaantra - AI-Powered Agricultural Ecosystem
+# AgriSetu - AI-Powered Agricultural Ecosystem
 
-Kisaantra is a comprehensive agricultural ecosystem designed to empower Indian farmers with cutting-edge AI solutions. Built with love and innovation, this platform brings together various tools and technologies to make farming smarter and more efficient.
+AgriSetu is a comprehensive agricultural ecosystem designed to empower Indian farmers with cutting-edge AI solutions. Built with love and innovation, this platform brings together various tools and technologies to make farming smarter and more efficient.
 
-[Visit AgriSetu](https://agrisetu-1.onrender.com)
+<p align="center">
+  🔗 <a href="https://routewiz.onrender.com" target="_blank"><strong>Visit AgriSetu</strong></a>
+</p>
 
 ![Landing Page](frontend/src/images/LandingPage.png)
 
